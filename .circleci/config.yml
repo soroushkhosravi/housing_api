@@ -8,6 +8,8 @@ orbs:
 workflows:
   application-deployment:
     jobs:
+      # The requirements of this job are setting the following ENV variables for the circleci application:
+      # AWS_ACCESS_KEY_ID, AWS_ACCOUNT_ID, AWS_ECR_REGISTRY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY
       - aws-ecr/build-and-push-image:
           tag: $CIRCLE_SHA1
           filters:
