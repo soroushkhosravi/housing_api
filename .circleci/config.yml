@@ -9,7 +9,6 @@ workflows:
   application-deployment:
     jobs:
       - aws-ecr/build-and-push-image:
-#          region: us-west-2
           tag: $CIRCLE_SHA1
           filters:
             branches:
