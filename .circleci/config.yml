@@ -9,6 +9,7 @@ workflows:
   application-deployment:
     jobs:
       - aws-ecr/build-and-push-image:
+          region: us-west-2
           filters:
             branches:
               only:
