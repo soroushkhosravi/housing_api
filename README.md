@@ -1,2 +1,2 @@
 # housing_api
-This is an attempt to create an api for house investment
+This is an api that enables us to make better decisions for investment in houses.
