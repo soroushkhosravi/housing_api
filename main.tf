@@ -50,7 +50,7 @@ provider "helm" {
 
 resource "helm_release" "housing-api-remote-release" {
   name         = "housing-api-release"
-  chart        = "../housing-api"
+  chart        = "./housing-api"
   reset_values = true
   set {
     name  = "current-time"
