@@ -48,9 +48,9 @@ provider "helm" {
   }
 }
 
-resource "helm_release" "housing-api" {
-  name         = "housing-api"
-  chart        = "./housing-api"
+resource "helm_release" "housing-api-remote-release" {
+  name         = "housing-api-release"
+  chart        = "housing-api"
   reset_values = true
   set {
     name  = "current-time"
