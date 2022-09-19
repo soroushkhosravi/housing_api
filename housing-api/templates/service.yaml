@@ -1,15 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "housing-api.fullname" . }}
-  labels:
-    {{- include "housing-api.labels" . | nindent 4 }}
+  name: housing-api-service-loadbalancer
 spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+  type: LoadBalancer
   selector:
-    {{- include "housing-api.selectorLabels" . | nindent 4 }}
+    test: MyExampleApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
