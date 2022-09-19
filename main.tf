@@ -37,7 +37,7 @@ data "aws_eks_cluster" "example" {
 }
 
 data "aws_eks_cluster_auth" "cluster-auth" {
-  name = aws_eks_cluster.example.name
+  name = data.aws_eks_cluster.example.name
 }
 
 provider "helm" {
