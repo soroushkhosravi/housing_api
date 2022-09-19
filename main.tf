@@ -54,7 +54,7 @@ provider "helm" {
 }
 
 data "external" "env" {
-  program = ["${path.module}/env.sh"]
+  program = ["sh", "${path.module}/env.sh"]
 
   # For Windows (or Powershell core on MacOS and Linux),
   # run a Powershell script instead
