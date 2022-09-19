@@ -17,7 +17,7 @@ spec:
       serviceAccountName: "my-service-account"
       containers:
         - name: "example"
-          image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api:8301513fbdaa4a2ceb9ae9115bd996290e8a45ec"
+          image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api:{{ .Values.commit }}"
           command: ["gunicorn" , "--bind",  "0.0.0.0:5000" , "app:app"]
           ports:
             - name: http
