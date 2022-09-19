@@ -71,7 +71,7 @@ resource "helm_release" "housing-api-remote-release" {
   }
 
   set {
-   name = "commit"
-   value = data.external.env.result["CIRCLE_SHA1"]
+    name  = "commit"
+    value = data.external.env.result["CIRCLE_SHA1"]
   }
 }
