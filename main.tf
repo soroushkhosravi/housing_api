@@ -49,7 +49,7 @@ provider "helm" {
     #args        = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.example.name]
     # command     = "aws"
     #}
-    token            = data.aws_eks_cluster_auth.cluster-auth.token
+    token = data.aws_eks_cluster_auth.cluster-auth.token
   }
 }
 
