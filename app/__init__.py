@@ -13,9 +13,3 @@ def health():
 def index():
     """The definition of the index endpoint."""
     return jsonify({'page': 'index'})
-
-
-@app.route('/endpoint')
-def endpoint():
-    """The definition of the index endpoint."""
-    return jsonify({'page': 'index'})
