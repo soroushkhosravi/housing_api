@@ -69,4 +69,9 @@ resource "helm_release" "housing-api-remote-release" {
     name  = "current-time"
     value = timestamp()
   }
+
+  set {
+   name = "commit"
+   value = data.external.env.result["CIRCLE_SHA1"]
+  }
 }
