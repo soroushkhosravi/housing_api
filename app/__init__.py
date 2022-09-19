@@ -7,7 +7,3 @@ app = Flask(__name__)
 def health():
     """The definition of the index endpoint."""
     return jsonify({'status': 'healthy'})
-
-@app.route('/index')
-def index():
-    return jsonify({'page': 'index'})
