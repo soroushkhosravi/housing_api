@@ -16,7 +16,7 @@ def home():
 
 @app.route('/second', methods=['POST'])
 def second():
-    """This shows the second form."""
+    """This shows the second form in the flow."""
     return render_template('job.html')
 
 
