@@ -1,0 +1,15 @@
+<html>
+<body>
+<h1>Welcome to the HomePage!</h1>
+<script src="{{url_for('static', filename='job.js')}}"></script>
+<form name="jobForm">
+    <input type="hidden" id="fname" name="fname">
+    <input type="hidden" id="lname" name="lname">
+    <label for="job">Job:</label><br>
+    <input type="text" id="job" name="job" value="Software engineer"><br>
+    <label for="salary">Salary:</label><br>
+    <input type="text" id="salary" name="salary" value="5000"><br><br>
+    <input type="submit" value="Submit" id="jobButton">
+</form>
+</body>
+</html>
