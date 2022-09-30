@@ -15,13 +15,13 @@ def home():
     """The definition of the index endpoint."""
     return render_template('home.html')
 
-@app.route('/second', methods=['POST'])
+@app.route('/second', methods=['POST', 'GET'])
 def second():
     """This shows the second form in the flow."""
     return render_template('job.html')
 
 
-@app.route('/third', methods=['POST'])
+@app.route('/third', methods=['POST', 'GET'])
 def third():
     """This shows the third form."""
     form_data = request.form
