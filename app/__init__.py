@@ -10,6 +10,7 @@ def health():
 
 
 @app.route('/home')
+@app.route('/')
 def home():
     """The definition of the index endpoint."""
     return render_template('home.html')
