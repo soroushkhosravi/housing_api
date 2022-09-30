@@ -8,4 +8,13 @@ window.onload = function(){
     var button = document.getElementById('nameButton');
     button.onclick = function(){
         nameFormSubmit()};
+
+    const template = `<span>
+    {{#if quotaFull}}
+      Please come back tomorrow.
+    {{/if}}
+    </span>`;
+    const templateFunction = Handlebars.compile(template);
+    const completedHtml = templateFunction({ quotaFull: true });
+    document.getElementById('handle').innerHTML = completedHtml;
 }

@@ -1,5 +1,6 @@
 <html>
 <body>
+<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
 <script src="{{url_for('static', filename='home.js')}}"></script>
 <h1>Welcome to the HomePage! Please answer the following questions:</h1>
     <form name="nameForm">
@@ -9,5 +10,6 @@
       <input type="text" id="lname" name="lname" required><br><br>
       <input type="submit" value="Submit" id="nameButton">
     </form>
+    <p id="handle"></p>
 </body>
 </html>
