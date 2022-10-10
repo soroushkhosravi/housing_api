@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: housing-api-service-loadbalancer
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     test: MyExampleApp
   ports:
