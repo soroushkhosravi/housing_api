@@ -36,4 +36,4 @@ def third():
 @app.route('/about')
 def about():
     """Returns the about endpoint."""
-    return jsonify({'message': 'Tis is the about page.'})
+    return jsonify({'messag': 'Tis is the about page.'})
