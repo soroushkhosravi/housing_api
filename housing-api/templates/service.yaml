@@ -3,10 +3,11 @@ kind: Service
 metadata:
   name: housing-api-service-loadbalancer
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     test: MyExampleApp
   ports:
     - protocol: TCP
       port: 80
       targetPort: 5000
+      nodePort: 30000
