@@ -32,3 +32,8 @@ def third():
         all_valus = all_valus + ' ' + str(form_data[key])
 
     return jsonify({'keys': all_fields, 'values': all_valus})
+
+@app.route('/about')
+def about():
+    """Returns the about endpoint."""
+    return jsonify({'message': 'This is the about page.'})
