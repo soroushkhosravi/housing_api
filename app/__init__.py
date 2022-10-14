@@ -15,6 +15,7 @@ from flask_sqlalchemy import SQLAlchemy
 from oauthlib.oauth2 import WebApplicationClient
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+os.environ['SECRET_KEY'] = 'secret'
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
 GOOGLE_DISCOVERY_URL = (
