@@ -8,6 +8,8 @@ services:
       - ./:/usr/src/app
     ports:
       - 5000:5000
+    environment:
+      - DB_URL=postgres://postgrs:postgres@db:5432/default
 
   db:
     image: postgres:14.1-alpine
@@ -15,6 +17,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=default
     ports:
       - '5432:5432'
     volumes:
