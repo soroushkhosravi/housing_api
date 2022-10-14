@@ -3,13 +3,15 @@ version: '3.8'
 services:
   web:
     build: .
-    command: gunicorn --bind 0.0.0.0:5000 app:app --reload
+    command: gunicorn --bind 0.0.0.0:5000 app:app --reload -t 80
     volumes:
       - ./:/usr/src/app
     ports:
       - 5000:5000
     environment:
-      - DB_URL=postgres://postgrs:postgres@db:5432/default
+      - DB_URL=postgresql://postgres:postgres@db:5432/default
+      - GOOGLE_CLIENT_ID=1039455511015-9of84all5bi5apuinop5nb02udkr02ad.apps.googleusercontent.com
+      - GOOGLE_CLIENT_SECRET=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
 
   db:
     image: postgres:14.1-alpine

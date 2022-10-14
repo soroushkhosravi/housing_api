@@ -1,2 +1,8 @@
 Flask
 gunicorn
+flask_sqlalchemy
+psycopg2-binary
+requests
+oauthlib
+pyOpenSSL
+Flask-Login
