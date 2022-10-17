@@ -47,12 +47,12 @@ data "aws_cloudformation_stack" "my-eks-vpc-stack" {
 # We create a subnet group including all the public subnets of the VPC we created.
 resource "aws_db_subnet_group" "first" {
   name       = "first"
-  subnet_ids = slice(split(",", aws_cloudformation_stack.my-eks-vpc-stack.outputs.SubnetIds), 0, 2)
+  subnet_ids = slice(split(",", data.aws_cloudformation_stack.my-eks-vpc-stack.outputs.SubnetIds), 0, 2)
 }
 
 resource "aws_security_group" "_" {
   name        = "first-sg"
-  vpc_id      = aws_cloudformation_stack.my-eks-vpc-stack.outputs.VpcId
+  vpc_id      = data.aws_cloudformation_stack.my-eks-vpc-stack.outputs.VpcId
   description = "RDS (terraform-managed)"
 
   # Only MySQL in
