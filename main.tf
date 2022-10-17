@@ -125,7 +125,7 @@ resource "helm_release" "housing-api-remote-release" {
   }
 
   set {
-    name = "db"
+    name  = "db"
     value = aws_db_instance.first.endpoint
   }
 }
