@@ -20,7 +20,7 @@ spec:
           image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api:{{ .Values.commit }}"
           env:
             - name: DB_URL
-              value: "{{.Values.db}}"
+              value: "postgresql://soroush:password@{{.Values.db}}/firstsoroushdb"
             - name: OAUTHLIB_INSECURE_TRANSPORT
               value: "1"
             - name: GOOGLE_CLIENT_ID
