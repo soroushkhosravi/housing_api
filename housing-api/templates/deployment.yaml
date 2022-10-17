@@ -18,6 +18,17 @@ spec:
       containers:
         - name: "example"
           image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api:{{ .Values.commit }}"
+          env:
+            - name: DB_URL
+              value: "{{.Values.db}}"
+            - name: OAUTHLIB_INSECURE_TRANSPORT
+              value: "1"
+            - name: GOOGLE_CLIENT_ID
+              value: "1039455511015-9of84all5bi5apuinop5nb02udkr02ad.apps.googleusercontent.com"
+            - name: GOOGLE_CLIENT_SECRET
+              value: "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"
+            - name: SECRET_KEY
+              value: "secret"
           command: ["gunicorn" , "--bind",  "0.0.0.0:5000" , "--workers", "3","app:app"]
           ports:
             - name: http

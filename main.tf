@@ -40,6 +40,55 @@ data "aws_eks_cluster_auth" "cluster-auth" {
   name = data.aws_eks_cluster.example.name
 }
 
+data "aws_cloudformation_stack" "my-eks-vpc-stack" {
+  name = "my-eks-vpc-stack"
+}
+
+# We create a subnet group including all the public subnets of the VPC we created.
+resource "aws_db_subnet_group" "first" {
+  name       = "first"
+  subnet_ids = slice(split(",", aws_cloudformation_stack.my-eks-vpc-stack.outputs.SubnetIds), 0, 2)
+}
+
+resource "aws_security_group" "_" {
+  name        = "first-sg"
+  vpc_id      = aws_cloudformation_stack.my-eks-vpc-stack.outputs.VpcId
+  description = "RDS (terraform-managed)"
+
+  # Only MySQL in
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow all outbound traffic.
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_db_instance" "first" {
+  identifier           = "first"
+  allocated_storage    = 10
+  db_subnet_group_name = aws_db_subnet_group.first.id
+  engine               = "postgres"
+  engine_version       = "12"
+  instance_class       = "db.t2.small"
+  db_name              = "firstsoroushdb"
+  username             = "soroush"
+  password             = "password"
+  port                 = 5432
+  publicly_accessible  = true
+  skip_final_snapshot  = true
+
+  vpc_security_group_ids = ["${aws_security_group._.id}"]
+}
+
 provider "helm" {
   kubernetes {
     host                   = data.aws_eks_cluster.example.endpoint
@@ -73,5 +122,10 @@ resource "helm_release" "housing-api-remote-release" {
   set {
     name  = "commit"
     value = data.external.env.result["CIRCLE_SHA1"]
+  }
+
+  set {
+    name = "db"
+    value = aws_db_instance.first.endpoint
   }
 }
