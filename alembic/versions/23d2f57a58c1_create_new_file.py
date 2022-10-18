@@ -18,7 +18,7 @@ depends_on = None
 
 def upgrade() -> None:
     conn = op.get_bind()
-    conn.execute("""CREATE TABLE user (
+    conn.execute("""CREATE TABLE users (
           id TEXT PRIMARY KEY,
           name TEXT NOT NULL,
           email TEXT UNIQUE NOT NULL,
