@@ -9,6 +9,7 @@ spec:
   backoffLimit: 0
   template:
     spec:
+      restartPolicy: "Never"
       containers:
       - name: 'migration'
         image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api:{{ .Values.commit }}"
