@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: 'migration'
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      containers:
+      - name: 'migration'
+        image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api:{{ .Values.commit }}"
+        env:
+          - name: DB_URL
+            value: "postgresql://soroush:password@{{.Values.db}}/firstsoroushdb"
+        command: ["alembic" , "upgrade",  "head"]

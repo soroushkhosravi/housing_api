@@ -6,3 +6,4 @@ requests
 oauthlib
 pyOpenSSL
 Flask-Login
+alembic

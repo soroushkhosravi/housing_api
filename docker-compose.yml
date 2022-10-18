@@ -26,6 +26,11 @@ services:
       - '5432:5432'
     volumes:
       - db:/var/lib/postgresql/data
+
+  alembic:
+    build: .
+    volumes:
+      - ./:/usr/src/app
 volumes:
   db:
     driver: local
