@@ -63,6 +63,10 @@ def login():
     google_provider_cfg = get_google_provider_cfg()
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
 
+    # It gives us just an endpoint like the following thing:
+    # authorization_endpoint:
+    # https://accounts.google.com/o/oauth2/v2/auth
+
     # Use library to construct the request for login and provide
     # scopes that let you retrieve user's profile from Google
     request_uri = client.prepare_request_uri(
@@ -70,6 +74,13 @@ def login():
         redirect_uri=request.base_url + "/callback",
         scope=["openid", "email", "profile"],
     )
+    # The url is included the `fall back` route, the google client ID the scope we want:
+    # request_uri:
+    # https://accounts.google.com/o/oauth2/v2/auth?
+    # response_type=code&
+    # client_id=1039455511015-9of84all5bi5apuinop5nb02udkr02ad.apps.googleusercontent.com&
+    # redirect_uri=http://127.0.0.1/5000/login/callback&
+    # scope=openid+email+profile
     return redirect(request_uri)
 
 
@@ -83,19 +94,64 @@ def callback():
     google_provider_cfg = get_google_provider_cfg()
     token_endpoint = google_provider_cfg["token_endpoint"]
 
+    # Token endpoint is an endpoint like the following:
+    #token_endpoint:
+    #  https://oauth2.googleapis.com/token
+
     # Prepare and send request to get tokens! Yay tokens!
+    # For the following:
+    #
+    # request.url:
+    # http://127.0.0.1:5000/login/callback?
+    # code=4/0ARtbsJpaRMA653ehFkjB4AjtAp_2ibfyoMwxKswc0UsogytmMUBKeMihv1miqP2giH04uA&
+    # scope=email+profile+openid+
+    # https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile&
+    # authuser=0&
+    # prompt=consent
+    #
+    # request.base_url:
+    #  http://127.0.0.1:5000/login/callback
+    #
+    # code:
+    # 4/0ARtbsJqnTf7LlnnK6Vz-PownqaaIzAqQWiDNM5Hs7luJZWL28Z5gCncyPTl6lyosiRIcPg
+
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
         authorization_response=request.url,
         redirect_url=request.base_url,
         code=code,
     )
+
+    # token_url:
+    #  https://oauth2.googleapis.com/token
+
+    # headers
+    # {'Content-Type': 'application/x-www-form-urlencoded'}
+
+    # body:
+    # grant_type=authorization_code&
+    # client_id=1039455511015-9of84all5bi5apuinop5nb02udkr02ad.apps.googleusercontent.com&
+    # code=4/0ARtbsJo5xHhbH_8ftuA_xI-kJW5RYaT1-xdyf5lZyl2kSNYKzqDTS4EVtE8L1_LE-8rDEw&
+    # redirect_uri=http://127.0.0.1:5000/login/callback
+
+    # auth: This is something that we have received from google when creating the credentials.
+
+    # raise Exception(str(body).replace('%2F', '/').replace('%3A', ':'))
     token_response = requests.post(
         token_url,
         headers=headers,
         data=body,
         auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
     )
+
+    # token_response:
+    #{
+    #    'access_token': 'ya29.a0Aa4xrXOo4sFLyULIWm7w5fVSIW-HCptdwz1Yw6jdDzQ34Qnyp1mXmIWROKT_V3hXg-J3jNk76UhnY4nCKUbKBxUQDaClw3m1fnJnvDeplDkMZ2cg80shM-Xn4hVws5WkHDsXTz3ouXVrACyPBNRrDNZA9gMBaCgYKATASARESFQEjDvL9VVn4rcdLgz74HJ1PQWmR3Q0163',
+    #    'expires_in': 3599,
+    #    'scope': 'openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+    #    'token_type': 'Bearer',
+    #    'id_token': 'eyJhbGciOiJSUzI1NiIsImtpZCI6ImVlMWI5Zjg4Y2ZlMzE1MWRkZDI4NGE2MWJmOGNlY2Y2NTliMTMwY2YiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxMDM5NDU1NTExMDE1LTlvZjg0YWxsNWJpNWFwdWlub3A1bmIwMnVka3IwMmFkLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMTAzOTQ1NTUxMTAxNS05b2Y4NGFsbDViaTVhcHVpbm9wNW5iMDJ1ZGtyMDJhZC5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjExNTU2NzI5NDY2ODQ5ODQ4MzY1MCIsImVtYWlsIjoic29ydXNoLmtoNjhAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJ4YlpQd2k0elZvQUh1eUhldEN0Y0FRIiwibmFtZSI6InNvcm9vc2gga2hvc3JhdmkiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUxtNXd1MkNRb0FlSjlwZmE1R0d6dHhRcDgwOTl4MXpfT2pjaVRXcWRwbVM9czk2LWMiLCJnaXZlbl9uYW1lIjoic29yb29zaCIsImZhbWlseV9uYW1lIjoia2hvc3JhdmkiLCJsb2NhbGUiOiJlbiIsImlhdCI6MTY2NjM0NzY3MCwiZXhwIjoxNjY2MzUxMjcwfQ.lm3x3uOcjd2yAJn1EOyPuNH9ILKMGkYH_u7XzIFJ3uGby61sCj4THFhbZmajHoa4157XufBLLub6VuqQR0qbVJKce1vhIELIQIbN7fUm0thg8q7Za2FY40h4Iikyd208qHAUMf0o-fe7q30sg3CfsJn25kcXIaS5kCM9iqb_pEbEYuigK43O1siTLq1bJNIgfmjZFJJQByRj9a2ayfKOEtqEfztW955MUDhIEFjJFa1TolBYTW1Wxddo7TtMBCQKUm9tAvlx5b_qI3Ui_LpwgTK2eJ6xBmuhzyF-kkF28XNdAZ7fYTvG5Mu_XH-DMNzl78laWgp4pEqbSe22BKelgw'
+    # }
 
     # Parse the tokens!
     client.parse_request_body_response(json.dumps(token_response.json()))
@@ -105,6 +161,17 @@ def callback():
     # including their Google Profile Image and Email
     userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
     uri, headers, body = client.add_token(userinfo_endpoint)
+
+    # uri:
+    #  https://openidconnect.googleapis.com/v1/userinfo
+
+    # headers:
+    # {'Authorization':
+    # 'Bearer ya29.a0Aa4xrXNNnuGPAjlEdvJ3_HlW6NhcXJiWCqLYQ-n-1JFK898_p1Ai7_px3p4wsjrFm4Das-cm9TjoQZv0BVvRhnZLWmNwnBt
+    # HEvYemIdbBfiO6wujl0mxlzGub0okia4JS6jzie_qTQaVlJ_lbzvjZnRh4q4VaCgYKATASARISFQEjDvL9WAcpXM2m6RYZULPDmiG4Og0163'
+    # }
+    # body:
+    # None
     userinfo_response = requests.get(uri, headers=headers, data=body)
 
     # We want to make sure their email is verified.
