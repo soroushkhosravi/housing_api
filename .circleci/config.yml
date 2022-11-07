@@ -9,9 +9,10 @@ orbs:
 jobs:
   build:
     docker:
-      - image: python:3.8
+      - image: python:3.9.5-slim-buster
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: create docker container
           command: |
