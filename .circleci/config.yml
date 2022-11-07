@@ -27,6 +27,10 @@ jobs:
           command: |
             docker build -t soroush .
       - run:
+          name: Running the container
+          command: |
+            docker run soroush --name soroush
+      - run:
           name: Run the unit tests
           command: |
             docker exec -it soroush sh -c "pytest"
