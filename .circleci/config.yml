@@ -10,16 +10,16 @@ jobs:
   build:
     docker:
       image: python:3.9.5-slim-buster
-      steps:
-        - checkout
-        - run:
-            name: create docker container
-            command: |
-              docker build -t soroush .
-        - run:
-            name: Run the unit tests
-            command: |
-              docker exec -it soroush sh -c "pytest"
+    steps:
+      - checkout
+      - run:
+          name: create docker container
+          command: |
+            docker build -t soroush .
+      - run:
+          name: Run the unit tests
+          command: |
+            docker exec -it soroush sh -c "pytest"
 
 workflows:
   test:
