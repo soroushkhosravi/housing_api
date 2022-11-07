@@ -29,7 +29,7 @@ jobs:
       - run:
           name: Running the container
           command: |
-            docker run -d --name soroush soroush
+            docker run --name soroush soroush tail -f /dev/null
       - run:
           name: Run the unit tests
           command: |
