@@ -26,18 +26,22 @@ jobs:
           name: create docker container
           command: |
             docker build -t soroush .
-      - run: docker run -d --name soroush soroush tail -f /dev/null
-      - run: docker logs soroush
-      - run: docker exec -it soroush sh -c "pytest"
-      - run: docker stop $(docker ps -aq)
-#      - run:
-#          name: Running the container
-#          command: |
-#            docker run --name soroush soroush tail -f /dev/null
-#      - run:
-#          name: Run the unit tests
-#          command: |
-#            docker exec -it soroush sh -c "pytest"
+#      - run: docker run -d --name soroush soroush tail -f /dev/null
+#      - run: docker logs soroush
+#      - run: docker exec -it soroush sh -c "pytest"
+#      - run: docker stop $(docker ps -aq)
+      - run:
+          name: Running the container
+          command: |
+            docker run -d --name soroush soroush tail -f /dev/null
+      - run:
+          name: Run the unit tests
+          command: |
+            docker exec -it soroush sh -c "pytest"
+      - run:
+          name: stop the container
+          command: |
+            docker stop $(docker ps -aq)
 
 
 workflows:
