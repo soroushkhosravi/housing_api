@@ -27,6 +27,7 @@ jobs:
           command: |
             docker build -t soroush .
       - run: docker run -d --name soroush soroush
+      - run: docker logs soroush
       - run: docker exec -it soroush sh -c "pytest"
       - run: docker stop $(docker ps -aq)
 #      - run:
