@@ -69,7 +69,6 @@ workflows:
           environment: prod
           working_directory:
             - .
-
 #      - terraform/fmt:
 #          checkout: true
 #          context: terraform
