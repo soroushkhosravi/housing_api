@@ -147,7 +147,7 @@ resource "helm_release" "housing-api-remote-release" {
   }
 
   set {
-    name = "dbPassword"
+    name  = "dbPassword"
     value = random_string.random.result
   }
 }
