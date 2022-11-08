@@ -6,8 +6,6 @@ orbs:
   aws-ecr: circleci/aws-ecr@8.1.2
   terraform2: orbies/terraform@8.1.0
   terraform: circleci/terraform@3.1
-  aws-cli: opensimsim/aws-cli@1.2.1
-
 
 jobs:
   test:
