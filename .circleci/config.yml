@@ -40,7 +40,35 @@ jobs:
           name: stop the container
           command: |
             docker stop $(docker ps -aq)
-
+  plan-apply:
+    working_directory: /tmp/project
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - checkout
+      - run:
+          name: terraform init & plan
+          command: |
+            terraform init -input=false
+            terraform plan -out tfapply
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  apply:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform
+          command: |
+            terraform apply -auto-approve tfapply
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
 workflows:
   application-deployment:
@@ -58,27 +86,33 @@ workflows:
           repo: housing-api
           requires:
             - test
-      - terraform/fmt:
-          checkout: true
-          context: terraform
+      - plan-apply:
           requires:
             - aws-ecr/build-and-push-image
-      - terraform/validate:
-          checkout: true
-          context: terraform
+      - apply:
           requires:
-            - terraform/fmt
-      - terraform/plan:
-          checkout: true
-          context: terraform
-          persist-workspace: true
-          requires:
-            - terraform/validate
-      - terraform/apply:
-          attach-workspace: true
-          context: terraform
-          filters:
-            branches:
-              only: main
-          requires:
-            - terraform/plan
+            - plan-apply
+#      - terraform/fmt:
+#          checkout: true
+#          context: terraform
+#          requires:
+#            - aws-ecr/build-and-push-image
+#      - terraform/validate:
+#          checkout: true
+#          context: terraform
+#          requires:
+#            - terraform/fmt
+#      - terraform/plan:
+#          checkout: true
+#          context: terraform
+#          persist-workspace: true
+#          requires:
+#            - terraform/validate
+#      - terraform/apply:
+#          attach-workspace: true
+#          context: terraform
+#          filters:
+#            branches:
+#              only: main
+#          requires:
+#            - terraform/plan
