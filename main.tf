@@ -25,11 +25,12 @@ provider "aws" {
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.example.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.example.certificate_authority[0].data)
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    args        = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.example.name]
-    command     = "aws"
-  }
+  #exec {
+  #api_version = "client.authentication.k8s.io/v1beta1"
+  #args        = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.example.name]
+  #command     = "aws"
+  #}
+  token = data.aws_eks_cluster_auth.cluster-auth.token
 }
 
 data "aws_eks_cluster" "example" {
@@ -110,11 +111,11 @@ provider "helm" {
   kubernetes {
     host                   = data.aws_eks_cluster.example.endpoint
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.example.certificate_authority[0].data)
-    exec {
-      api_version = "client.authentication.k8s.io/v1beta1"
-      args        = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.example.name]
-      command     = "aws"
-    }
+    #exec {
+    #api_version = "client.authentication.k8s.io/v1beta1"
+    #args        = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.example.name]
+    #command     = "aws"
+    #}
     token = data.aws_eks_cluster_auth.cluster-auth.token
   }
 }
@@ -150,4 +151,11 @@ resource "helm_release" "housing-api-remote-release" {
     name  = "dbPassword"
     value = random_password.password.result
   }
+}
+
+data "kubernetes_service" "example" {
+  metadata {
+    name = "housing-api-service-loadbalancer"
+  }
+  depends_on = [helm_release.housing-api-remote-release]
 }
