@@ -54,6 +54,8 @@ workflows:
                 - main
           dockerfile: Dockerfile
           repo: housing-api
+          requires:
+            - test
       - terraform/fmt:
           checkout: true
           context: terraform
