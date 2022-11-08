@@ -15,12 +15,6 @@ jobs:
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION
-      - run:
-          name: Install PIP
-          command: sudo apt-get install python3-pip libpython3-dev
-      - run:
-          name: Install awscli
-          command: sudo pip install awscli
   test:
     docker:
       - image: python:3.8
