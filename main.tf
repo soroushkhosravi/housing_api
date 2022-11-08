@@ -151,3 +151,9 @@ resource "helm_release" "housing-api-remote-release" {
     value = random_password.password.result
   }
 }
+
+data "kubernetes_service" "example" {
+  metadata {
+    name = "housing-api-service-loadbalancer"
+  }
+}
