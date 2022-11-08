@@ -67,7 +67,7 @@ workflows:
               only:
                 - main
           environment: prod
-          working_directory: "~/"
+          working_directory: "~/tmp"
 #      - terraform/fmt:
 #          checkout: true
 #          context: terraform
