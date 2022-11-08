@@ -50,17 +50,17 @@ resource "aws_db_subnet_group" "first" {
   subnet_ids = slice(split(",", data.aws_cloudformation_stack.my-eks-vpc-stack.outputs.SubnetIds), 0, 2)
 }
 
-resource "random_string" "random" {
+resource "random_password" "password" {
   length           = 16
   special          = true
-  override_special = "/@£$"
+  override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
 resource "aws_ssm_parameter" "secret" {
   name        = "/production/database/password/master"
   description = "The password for the production database."
   type        = "SecureString"
-  value       = random_string.random.result
+  value       = random_password.password.result
 
   tags = {
     environment = "production"
@@ -98,7 +98,7 @@ resource "aws_db_instance" "first" {
   instance_class       = "db.t2.small"
   db_name              = "firstsoroushdb"
   username             = "soroush"
-  password             = random_string.random.result
+  password             = random_password.password.result
   port                 = 5432
   publicly_accessible  = true
   skip_final_snapshot  = true
@@ -148,7 +148,7 @@ resource "helm_release" "housing-api-remote-release" {
 
   set {
     name  = "dbPassword"
-    value = random_string.random.result
+    value = random_password.password.result
   }
 }
 
