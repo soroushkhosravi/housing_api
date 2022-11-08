@@ -151,3 +151,8 @@ resource "helm_release" "housing-api-remote-release" {
     value = random_string.random.result
   }
 }
+
+data "aws_lb" "housing" {
+  name       = "housing-api-service-loadbalancer"
+  depends_on = [helm_release.housing-api-remote-release]
+}
