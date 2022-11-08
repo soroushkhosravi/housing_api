@@ -17,7 +17,7 @@ jobs:
           aws-region: AWS_REGION
       - run:
           name: Install PIP
-          command: sudo apt-get install python3-pip python3-dev
+          command: sudo apt-get install python3-pip libpython3-dev
       - run:
           name: Install awscli
           command: sudo pip install awscli
