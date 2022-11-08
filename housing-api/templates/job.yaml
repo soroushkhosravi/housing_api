@@ -15,5 +15,5 @@ spec:
         image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api:{{ .Values.commit }}"
         env:
           - name: DB_URL
-            value: "postgresql://soroush:password@{{.Values.db}}/firstsoroushdb"
+            value: "postgresql://soroush:{{.Values.dbPassword}}@{{.Values.db}}/firstsoroushdb"
         command: ["alembic" , "upgrade",  "head"]
