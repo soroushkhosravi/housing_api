@@ -4,8 +4,8 @@ version: 2.1
 
 orbs:
   aws-ecr: circleci/aws-ecr@8.1.2
-  terraform: orbies/terraform@8.1.0
-#  terraform: circleci/terraform@3.1
+  terraform2: orbies/terraform@8.1.0
+  terraform: circleci/terraform@3.1
 
 
 jobs:
@@ -58,37 +58,27 @@ workflows:
           repo: housing-api
           requires:
             - test
+      - terraform/fmt:
+          checkout: true
+          context: terraform
+          requires:
+            - aws-ecr/build-and-push-image
       - terraform/validate:
-          access_key: $AWS_ACCESS_KEY_ID
-          secret_access_key: $AWS_SECRET_ACCESS_KEY
-          aws_region: $AWS_REGION
+          checkout: true
+          context: terraform
+          requires:
+            - terraform/fmt
+      - terraform/plan:
+          checkout: true
+          context: terraform
+          persist-workspace: true
+          requires:
+            - terraform/validate
+      - terraform/apply:
+          attach-workspace: true
+          context: terraform
           filters:
             branches:
-              only:
-                - main
-          environment: "."
-          working_directory: "~/tmp"
-#      - terraform/fmt:
-#          checkout: true
-#          context: terraform
-#          requires:
-#            - aws-ecr/build-and-push-image
-#      - terraform/validate:
-#          checkout: true
-#          context: terraform
-#          requires:
-#            - terraform/fmt
-#      - terraform/plan:
-#          checkout: true
-#          context: terraform
-#          persist-workspace: true
-#          requires:
-#            - terraform/validate
-#      - terraform/apply:
-#          attach-workspace: true
-#          context: terraform
-#          filters:
-#            branches:
-#              only: main
-#          requires:
-#            - terraform/plan
+              only: main
+          requires:
+            - terraform/plan
