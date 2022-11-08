@@ -51,7 +51,6 @@ jobs:
 workflows:
   application-deployment:
     jobs:
-      - setup_aws_cli
       - test
       # The requirements of this job are setting the following ENV variables for the circleci application:
       # AWS_ACCESS_KEY_ID, AWS_ACCOUNT_ID, AWS_ECR_REGISTRY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY
@@ -76,11 +75,15 @@ workflows:
           requires:
             - terraform/fmt
       - terraform/plan:
+          steps:
+            - aws-cli/setup:
+                aws-access-key-id: AWS_ACCESS_KEY_ID
+                aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+                aws-region: AWS_REGION
           checkout: true
           context: terraform
           persist-workspace: true
           requires:
-            - setup_aws_cli
             - terraform/validate
       - terraform/apply:
           attach-workspace: true
