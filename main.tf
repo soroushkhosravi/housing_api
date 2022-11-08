@@ -152,7 +152,9 @@ resource "helm_release" "housing-api-remote-release" {
   }
 }
 
-data "aws_lb" "housing" {
-  name       = "housing-api-service-loadbalancer"
+data "kubernetes_service" "example" {
+  metadata {
+    name = "housing-api-service-loadbalancer"
+  }
   depends_on = [helm_release.housing-api-remote-release]
 }
