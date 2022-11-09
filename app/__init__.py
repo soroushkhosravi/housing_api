@@ -46,7 +46,7 @@ def hello():
 def index():
     if current_user.is_authenticated:
         return (
-            "<p>Hello, {}! You're logged in! Email:: {}</p>"
+            "<p>Hello, {}! You're logged in! Email: {}</p>"
             "<div><p>Google Profile Picture:</p>"
             '<img src="{}" alt="Google profile pic"></img></div>'
             '<a class="button" href="/logout">Logout</a>'.format(
