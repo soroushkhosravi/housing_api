@@ -164,3 +164,11 @@ data "aws_route53_zone" "selected" {
   name         = "housingselection.co.uk"
   private_zone = false
 }
+
+resource "aws_route53_record" "example" {
+  zone_id = "data.aws_route53_zone.selected.zone_id"
+  name    = "example"
+  type    = "CNAME"
+  ttl     = "300"
+  records = [data.kubernetes_service.example.status.0.load_balancer.0.ingress.0.hostname]
+}
