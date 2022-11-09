@@ -159,3 +159,8 @@ data "kubernetes_service" "example" {
   }
   depends_on = [helm_release.housing-api-remote-release]
 }
+
+data "aws_route53_zone" "selected" {
+  name         = "housingselection.co.uk"
+  private_zone = true
+}
