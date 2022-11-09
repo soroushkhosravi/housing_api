@@ -161,7 +161,7 @@ data "kubernetes_service" "example" {
 }
 
 data "aws_route53_zone" "selected" {
-  name         = "housingselection.co.uk"
+  name         = "housingselection.co.uk."
   private_zone = false
 }
 
