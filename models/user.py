@@ -1,4 +1,5 @@
-from .db import db
+"""The definition of the user model."""
+from infrastructure.database import db
 from flask_login import UserMixin
 
 class User(db.Model, UserMixin):

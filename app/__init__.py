@@ -13,8 +13,8 @@ from flask_login import (
 )
 from oauthlib.oauth2 import WebApplicationClient
 
-from .db import db
-from .user import User
+from infrastructure.database import db
+from models.user import User
 
 GOOGLE_CLIENT_ID = os.environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_CLIENT_SECRET"]
