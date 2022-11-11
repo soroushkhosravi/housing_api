@@ -3,6 +3,7 @@ import requests
 import pgeocode
 import numpy as np
 from models.location import Location
+from schemas.crime import CrimeSchema
 
 class Crime:
     """The repository responsible for finding number of crimes."""
@@ -26,9 +27,36 @@ class Crime:
         location = None
 
         if not np.isnan(query.latitude) and not np.isnan(query.longitude):
-            location = Location(latitude=query.latitude, longitude=query.longitude)
+            location = Location(
+                latitude=float(query.latitude),
+                longitude=float(query.longitude))
 
         return location
+
+    def get_crimes(self, postcode, month, year):
+        """Returns list of crimes for a specific postcode.
+
+        Args:
+            postcode: The postcode of the place.
+            month: The month number.
+            year: The year number.
+
+        Returns:
+            List of crimes happened in the place.
+        """
+        location = self.grab_location(postcode=postcode)
+
+        if not location:
+            return None
+        response = self._http.get(
+            f'https://data.police.uk/api/crimes-street/all-crime?lat={location.latitude}&'
+            f'lng={location.longitude}&date={year}-{month}'
+        )
+
+        if response.status_code != 200:
+            return None
+
+        return CrimeSchema(many=True).load(response.json())
 
 
 
