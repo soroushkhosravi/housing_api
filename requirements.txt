@@ -9,3 +9,5 @@ Flask-Login
 alembic
 pytest
 marshmallow
+pgeocode
+numpy
