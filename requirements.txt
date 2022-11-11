@@ -8,3 +8,4 @@ pyOpenSSL
 Flask-Login
 alembic
 pytest
+marshmallow
