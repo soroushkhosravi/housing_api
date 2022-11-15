@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "2048-ingress"
-  namespace: "2048-game"
+  namespace: "default"
   labels:
     app: 2048-nginx-ingress
   annotations:
