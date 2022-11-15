@@ -1,20 +1,20 @@
-#apiVersion: networking.k8s.io/v1
-#kind: Ingress
-#metadata:
-#  name: "2048-ingress"
-#  namespace: "default"
-#  labels:
-#    app: 2048-nginx-ingress
-#  annotations:
-#    kubernetes.io/ingress.class: alb
-#spec:
-#  rules:
-#    - http:
-#        paths:
-#          - path: /*
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: "housing-api-service-loadbalancer"
-#                port:
-#                  number: 80
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "2048-ingress"
+  namespace: "default"
+  labels:
+    app: 2048-nginx-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            pathType: Prefix
+            backend:
+              service:
+                name: "housing-api-service-loadbalancer"
+                port:
+                  number: 80
