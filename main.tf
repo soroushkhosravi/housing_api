@@ -170,13 +170,13 @@ data "aws_elb" "example" {
 }
 
 resource "aws_route53_record" "www" {
-zone_id = data.aws_route53_zone.selected.zone_id
-name    = "new"
-type    = "A"
+  zone_id = data.aws_route53_zone.selected.zone_id
+  name    = "new"
+  type    = "A"
 
-alias {
-name                   = data.aws_elb.example.dns_name
-zone_id                = data.aws_elb.example.zone_id
-evaluate_target_health = true
-}
+  alias {
+    name                   = data.aws_elb.example.dns_name
+    zone_id                = data.aws_elb.example.zone_id
+    evaluate_target_health = true
+  }
 }
