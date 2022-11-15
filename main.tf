@@ -171,7 +171,7 @@ data "aws_elb" "example" {
 
 resource "aws_route53_record" "www" {
   zone_id = data.aws_route53_zone.selected.zone_id
-  name    = "example"
+  name    = "api"
   type    = "A"
 
   alias {
