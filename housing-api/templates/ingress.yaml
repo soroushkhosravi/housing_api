@@ -8,7 +8,6 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: alb
 spec:
-  ingressClassName: alb
   rules:
     - http:
         paths:
