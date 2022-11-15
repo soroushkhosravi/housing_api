@@ -5,6 +5,8 @@ metadata:
   namespace: "2048-game"
   labels:
     app: 2048-nginx-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
 spec:
   ingressClassName: alb
   rules:
