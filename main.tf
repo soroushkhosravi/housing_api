@@ -153,7 +153,7 @@ resource "helm_release" "housing-api-remote-release" {
   }
 }
 
-data "kubernetes_service" "example" {
+data "kubernetes_ingress" "example" {
   metadata {
     name = "housing-api-service-loadbalancer"
   }
@@ -166,7 +166,7 @@ data "aws_route53_zone" "selected" {
 }
 
 data "aws_elb" "example" {
-  name = split("-", split(".", data.kubernetes_service.example.status.0.load_balancer.0.ingress.0.hostname).0).0
+  name = split("-", split(".", data.kubernetes_ingress.example.status.0.load_balancer.0.ingress.0.hostname).0).0
 }
 
 resource "aws_route53_record" "www" {
