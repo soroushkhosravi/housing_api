@@ -169,7 +169,7 @@ resource "aws_route53_record" "abc" {
   name    = "abc"
   type    = "CNAME"
   ttl     = 600
-  zone_id = aws_route53_zone.selected.id
+  zone_id = data.aws_route53_zone.selected.id
 
   records = [data.kubernetes_ingress_v1.example.status.0.load_balancer.0.ingress.0.hostname]
 }
