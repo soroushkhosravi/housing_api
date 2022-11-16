@@ -153,7 +153,7 @@ resource "helm_release" "housing-api-remote-release" {
   }
 }
 
-data "kubernetes_ingress" "example" {
+data "kubernetes_ingress_v1" "example" {
   metadata {
     name = "housing-api-ingress"
   }
@@ -165,18 +165,11 @@ data "aws_route53_zone" "selected" {
   private_zone = false
 }
 
-data "aws_elb" "example" {
-  name = split("-", split(".", data.kubernetes_ingress.example.status.0.load_balancer.0.ingress.0.hostname).0).0
-}
+resource "aws_route53_record" "abc" {
+  name    = "abc"
+  type    = "CNAME"
+  ttl     = 600
+  zone_id = aws_route53_zone.selected.id
 
-resource "aws_route53_record" "www" {
-  zone_id = data.aws_route53_zone.selected.zone_id
-  name    = "new"
-  type    = "A"
-
-  alias {
-    name                   = data.aws_elb.example.dns_name
-    zone_id                = data.aws_elb.example.zone_id
-    evaluate_target_health = true
-  }
+  records = [data.kubernetes_ingress_v1.example.status.0.load_balancer.0.ingress.0.hostname]
 }
