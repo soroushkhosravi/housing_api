@@ -156,7 +156,8 @@ resource "helm_release" "housing-api-remote-release" {
 
 data "kubernetes_ingress_v1" "example" {
   metadata {
-    name = "housing-api-ingress"
+    name      = "housing-api-ingress"
+    namespace = "housing-api"
   }
   depends_on = [helm_release.housing-api-remote-release]
 }
