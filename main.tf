@@ -130,6 +130,7 @@ data "external" "env" {
 
 resource "helm_release" "housing-api-remote-release" {
   name         = "housing-api-release"
+  namespace    = "housing-api"
   chart        = "./housing-api"
   reset_values = true
   set {
