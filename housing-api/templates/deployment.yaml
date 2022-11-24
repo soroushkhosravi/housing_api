@@ -34,3 +34,10 @@ spec:
             - name: http
               containerPort: 5000
               protocol: TCP
+        - name: "nginx"
+          image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api-nginx:{{ .Values.commit }}"
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+
