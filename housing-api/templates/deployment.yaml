@@ -16,12 +16,12 @@ spec:
     spec:
       serviceAccountName: "housing-api"
       containers:
-        - name: new-deployment
-          image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api-nginx:{{ .Values.commit }}"
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
+#        - name: new-deployment
+#          image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api-nginx:{{ .Values.commit }}"
+#          ports:
+#            - name: http
+#              containerPort: 80
+#              protocol: TCP
         - name: "web"
           image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api:{{ .Values.commit }}"
           env:
