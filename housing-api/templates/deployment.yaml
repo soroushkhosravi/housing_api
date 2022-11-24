@@ -45,11 +45,11 @@ spec:
                 echo '.'
                 sleep 15;
               done
-        containers:
-          - name: "nginx"
-            image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api-nginx:{{ .Values.commit }}"
-            ports:
-              - name: http
-                containerPort: 80
-                protocol: TCP
+        - containers:
+            - name: "nginx"
+              image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api-nginx:{{ .Values.commit }}"
+              ports:
+                - name: http
+                  containerPort: 80
+                  protocol: TCP
 
