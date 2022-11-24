@@ -16,7 +16,7 @@ spec:
     spec:
       serviceAccountName: "housing-api"
       containers:
-        - name: wait-for-app
+        - name: new-deployment
           image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api-nginx:{{ .Values.commit }}"
           ports:
             - name: http
