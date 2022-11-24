@@ -22,7 +22,6 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-      initContainers:
         - name: "example"
           image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api:{{ .Values.commit }}"
           env:
