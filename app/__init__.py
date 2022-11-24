@@ -39,7 +39,7 @@ def load_user(user_id):
 @login_required
 def hello():
     """Hello mate."""
-    return 'Hello mateee.'
+    return 'Hello mate.'
 
 
 @app.route("/")
