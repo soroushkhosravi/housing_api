@@ -106,8 +106,8 @@ workflows:
           checkout: true
           context: terraform
           requires:
-            - aws-ecr/BuildAppImage
-            - aws-ecr/BuildNginxImage
+            - BuildAppImage
+            - BuildNginxImage
       - terraform/validate:
           checkout: true
           context: terraform
