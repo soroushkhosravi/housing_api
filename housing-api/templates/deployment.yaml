@@ -16,6 +16,9 @@ spec:
     spec:
       serviceAccountName: "housing-api"
       containers:
+        - name: wait-for-app
+          image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api-nginx:{{ .Values.commit }}"
+      initContainers:
         - name: "example"
           image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api:{{ .Values.commit }}"
           env:
@@ -29,13 +32,9 @@ spec:
               value: "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"
             - name: SECRET_KEY
               value: "secret"
-          command: ["gunicorn" , "--bind",  "0.0.0.0:5000" , "--workers", "3","app:app"]
+          command: [ "gunicorn" , "--bind",  "0.0.0.0:5000" , "--workers", "3","app:app" ]
           ports:
             - name: http
               containerPort: 5000
               protocol: TCP
-      initContainers:
-        - name: wait-for-app
-          image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api-nginx:{{ .Values.commit }}"
-          command: ["sleep 300"]
 
