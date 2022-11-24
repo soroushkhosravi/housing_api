@@ -36,20 +36,6 @@ spec:
               protocol: TCP
       initContainers:
         - name: wait-for-app
-          args:
-            - /bin/bash
-            - -c
-            - >
-              set -x;
-              while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://example:5000" != "200" ]]; do
-                echo '.'
-                sleep 15;
-              done
-        - containers:
-            - name: "nginx"
-              image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api-nginx:{{ .Values.commit }}"
-              ports:
-                - name: http
-                  containerPort: 80
-                  protocol: TCP
+          image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api-nginx:{{ .Values.commit }}"
+          command: ["sleep 300"]
 
