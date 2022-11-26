@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: housing-api-service-loadbalancer
 spec:
+#  We would put load balancer type if we wanted a classic load balancer.
 #  type: LoadBalancer
   type: NodePort
   selector:
@@ -10,5 +11,6 @@ spec:
   ports:
     - protocol: TCP
       port: 80
+#      We would use port 5000 if we did not have nginx on top of the gunicorn
 #      targetPort: 5000
       targetPort: 80
