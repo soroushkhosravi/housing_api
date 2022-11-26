@@ -1,4 +1,4 @@
-"""The definition of the repositories."""
+"""The definition of all the repositories."""
 import requests
 
 from repositories.crime import Crime
