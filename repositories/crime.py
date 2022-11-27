@@ -54,7 +54,7 @@ class Crime:
         )
 
         if response.status_code != 200:
-            return None
+            return []
 
         return CrimeSchema(many=True).load(response.json())
 
