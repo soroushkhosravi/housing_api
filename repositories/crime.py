@@ -23,7 +23,8 @@ class Crime:
         Returns:
             A location having the longitude and latitude numbers.
         """
-        query = pgeocode.Nominatim(self.UK_ISO_CODE).query_postal_code(postcode)
+        corrected_postcode = postcode[:-3] + ' ' + postcode[-3:]
+        query = pgeocode.Nominatim(self.UK_ISO_CODE).query_postal_code(corrected_postcode)
         location = None
 
         if not np.isnan(query.latitude) and not np.isnan(query.longitude):
@@ -47,7 +48,7 @@ class Crime:
         location = self.grab_location(postcode=postcode)
 
         if not location:
-            return None
+            return []
         response = self._http.get(
             f'https://data.police.uk/api/crimes-street/all-crime?lat={location.latitude}&'
             f'lng={location.longitude}&date={year}-{month}'

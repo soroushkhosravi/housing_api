@@ -15,6 +15,10 @@ from oauthlib.oauth2 import WebApplicationClient
 
 from infrastructure.database import db
 from models.user import User
+from forms.address import AddressForm
+from repositories import get_crime_repository
+from datetime import datetime
+from collections import defaultdict
 
 GOOGLE_CLIENT_ID = os.environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_CLIENT_SECRET"]
@@ -213,6 +217,25 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
+@app.route('/address', methods=["GET", "POST"])
+def investigate_address():
+    """Investigates a specific address."""
+    form = AddressForm()
+    if form.validate_on_submit():
+        crimes = get_crime_repository().get_crimes(
+            postcode=form.post_code.data,
+            month=datetime.now().month - 2,
+            year=datetime.now().year
+        )
+
+        crimes_dict = defaultdict(lambda: 0) if crimes else {}
+
+        for crime in crimes:
+            crimes_dict[crime.category] += 1
+
+        return render_template('crimes.html', crimes=crimes_dict)
+
+    return render_template('address_form.html', form=form)
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
