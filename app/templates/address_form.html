@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+    <div class="form-wrapper">
+      <h2 class="title">Contact</h2>
+      <form method="POST" action="{{ url_for('investigate_address') }}">
+          {{form.hidden_tag()}}
+          <fieldset class="form-field">
+              {{ form.post_code.label }}
+              {{ form.post_code(size=20) }}
+          </fieldset>
+          {{ form.submit }}
+      </form>
+    </div>
+
+{% endblock %}
