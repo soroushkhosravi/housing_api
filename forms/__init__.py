@@ -1,0 +1,1 @@
+"""The definitions of all forms from the application."""

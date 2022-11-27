@@ -11,3 +11,5 @@ pytest
 marshmallow
 pgeocode
 numpy
+flask-wtf
+werkzeug
