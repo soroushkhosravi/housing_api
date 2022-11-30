@@ -49,14 +49,7 @@ def hello():
 @app.route("/")
 def index():
     if current_user.is_authenticated:
-        return (
-            "<p>Hello, {}! You're logged in! Email: {}</p>"
-            "<div><p>Google Profile Picture:</p>"
-            '<img src="{}" alt="Google profile pic"></img></div>'
-            '<a class="button" href="/logout">Logout</a>'.format(
-                current_user.name, current_user.email, current_user.profile_pic
-            )
-        )
+        return render_template('index.html')
     else:
         return '<a class="button" href="/login">Google Login</a>'
 
@@ -218,6 +211,7 @@ def logout():
     return redirect(url_for("index"))
 
 @app.route('/address', methods=["GET", "POST"])
+@login_required
 def investigate_address():
     """Investigates a specific address."""
     form = AddressForm()
@@ -235,7 +229,7 @@ def investigate_address():
 
         return render_template('crimes.html', crimes=crimes_dict)
 
-    return render_template('address_form.html', form=form)
+    return render_template('address_form.html', form=form, user=current_user)
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
