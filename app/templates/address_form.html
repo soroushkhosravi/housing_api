@@ -1,19 +1,16 @@
 {% extends 'base.html' %}
-
 {% block content %}
-
     <div class="form-wrapper">
-      <h2 class="title">Contact</h2>
-      <form method="POST" action="{{ url_for('investigate_address') }}">
+        <p class="title">You can investigate the address by filling the form.</p>
+        <form class="form-group" method="POST" action="{{ url_for('investigate_address') }}">
           {{form.hidden_tag()}}
-          <fieldset class="form-field">
-              {{ form.post_code.label }}
-              {{ form.post_code(size=20) }}
-          </fieldset>
-          <fieldset class="form-field">
-          {{ form.submit }}
-          </fieldset>
-      </form>
+            <div class="form-group">
+                {{ form.post_code.label }}
+                {{ form.post_code(class_='form-control') }}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class_='btn btn-primary') }}
+            </div>
+        </form>
     </div>
-
 {% endblock %}
