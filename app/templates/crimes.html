@@ -2,6 +2,8 @@
 
 {% block content %}
     {% if crimes %}
+    <div class="container">
+        <p>Total Number of crimes: {{ crimes|length }}</p>
     <table>
         <tr>
             <th>Crime Type</th>
@@ -17,4 +19,5 @@
     {% else %}
         <p>Crimes not available.</p>
     {% endif %}
+    </div>
 {% endblock %}
