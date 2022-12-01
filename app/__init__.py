@@ -218,7 +218,7 @@ def investigate_address():
     if form.validate_on_submit():
         crimes = get_crime_repository().get_crimes(
             postcode=form.post_code.data,
-            month=datetime.now().month - 2,
+            month=datetime.now().month - 3,
             year=datetime.now().year
         )
 
