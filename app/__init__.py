@@ -227,7 +227,7 @@ def investigate_address():
         for crime in crimes:
             crimes_dict[crime.category] += 1
 
-        return render_template('crimes.html', crimes=crimes_dict)
+        return render_template('crimes.html', crimes=crimes_dict, crimes_number =len(crimes))
 
     return render_template('address_form.html', form=form, user=current_user)
 
