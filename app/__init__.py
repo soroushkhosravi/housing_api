@@ -35,9 +35,11 @@ login_manager.init_app(app)
 login_manager.login_view = "index"
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
+
 
 @app.route('/hello')
 @login_required
@@ -48,17 +50,16 @@ def hello():
 
 @app.route("/")
 def index():
-    if current_user.is_authenticated:
-        return render_template('index.html')
-    else:
-        return '<a class="button" href="/login">Google Login</a>'
+    return render_template(
+        'index.html'
+    ) if current_user.is_authenticated else '<a class="button" href="/login">Google Login</a>'
 
 
 @app.route("/login")
 def login():
     # Find out what URL to hit for Google login
-    google_provider_cfg = get_google_provider_cfg()
-    authorization_endpoint = google_provider_cfg["authorization_endpoint"]
+    # google_provider_cfg = get_google_provider_cfg()
+    # authorization_endpoint = google_provider_cfg["authorization_endpoint"]
 
     # It gives us just an endpoint like the following thing:
     # authorization_endpoint:
@@ -67,7 +68,7 @@ def login():
     # Use library to construct the request for login and provide
     # scopes that let you retrieve user's profile from Google
     request_uri = client.prepare_request_uri(
-        authorization_endpoint,
+        get_google_provider_cfg()["authorization_endpoint"],
         redirect_uri=request.base_url + "/callback",
         scope=["openid", "email", "profile"],
     )
@@ -84,15 +85,14 @@ def login():
 @app.route("/login/callback")
 def callback():
     # Get authorization code Google sent back to you
-    code = request.args.get("code")
+    # code = request.args.get("code")
 
     # Find out what URL to hit to get tokens that allow you to ask for
     # things on behalf of a user
     google_provider_cfg = get_google_provider_cfg()
-    token_endpoint = google_provider_cfg["token_endpoint"]
 
     # Token endpoint is an endpoint like the following:
-    #token_endpoint:
+    # token_endpoint:
     #  https://oauth2.googleapis.com/token
 
     # Prepare and send request to get tokens! Yay tokens!
@@ -113,10 +113,10 @@ def callback():
     # 4/0ARtbsJqnTf7LlnnK6Vz-PownqaaIzAqQWiDNM5Hs7luJZWL28Z5gCncyPTl6lyosiRIcPg
 
     token_url, headers, body = client.prepare_token_request(
-        token_endpoint,
+        google_provider_cfg["token_endpoint"],
         authorization_response=request.url,
         redirect_url=request.base_url,
-        code=code,
+        code=request.args.get("code"),
     )
 
     # token_url:
@@ -142,7 +142,7 @@ def callback():
     )
 
     # token_response:
-    #{
+    # {
     #    'access_token': 'ya29.a0Aa4xrXOo4sFLyULIWm7w5fVSIW-HCptdwz1Yw6jdDzQ34Qnyp1mXmIWROKT_V3hXg-J3jNk76UhnY4nCKUbKBxUQDaClw3m1fnJnvDeplDkMZ2cg80shM-Xn4hVws5WkHDsXTz3ouXVrACyPBNRrDNZA9gMBaCgYKATASARESFQEjDvL9VVn4rcdLgz74HJ1PQWmR3Q0163',
     #    'expires_in': 3599,
     #    'scope': 'openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
@@ -210,11 +210,15 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
+
 @app.route('/address', methods=["GET", "POST"])
 @login_required
 def investigate_address():
     """Investigates a specific address."""
     form = AddressForm()
+
+    rendering_template = render_template('address_form.html', form=form, user=current_user)
+
     if form.validate_on_submit():
         crimes = get_crime_repository().get_crimes(
             postcode=form.post_code.data,
@@ -227,9 +231,10 @@ def investigate_address():
         for crime in crimes:
             crimes_dict[crime.category] += 1
 
-        return render_template('crimes.html', crimes=crimes_dict, crimes_number =len(crimes))
+        rendering_template = render_template('crimes.html', crimes=crimes_dict, crimes_number=len(crimes))
 
-    return render_template('address_form.html', form=form, user=current_user)
+    return rendering_template
+
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
