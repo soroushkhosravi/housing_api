@@ -19,6 +19,7 @@ from forms.address import AddressForm
 from repositories import get_crime_repository
 from datetime import datetime
 from collections import defaultdict
+from repositories.user import UserRepository
 
 GOOGLE_CLIENT_ID = os.environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_CLIENT_SECRET"]
@@ -189,14 +190,14 @@ def callback():
     # )
 
     # Doesn't exist? Add to database
-    existing_user = User.query.filter(User.google_id == unique_id).first()
+    user_repo = UserRepository(session=db.session)
+    existing_user = user_repo.get_by_google_id(google_id=unique_id)
     if not existing_user:
         user = User(google_id=unique_id, name=users_name, email=users_email, profile_pic=picture)
-        db.session.add(user)
-        db.session.commit()
+        user_repo.add(user)
+        user_repo.commit()
         existing_user = user
 
-    # raise Exception(existing_user.id)
     # Begin user session by logging the user in
     login_user(existing_user)
 

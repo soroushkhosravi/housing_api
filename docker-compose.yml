@@ -15,7 +15,9 @@ services:
       - OAUTHLIB_INSECURE_TRANSPORT=1
       - SECRET_KEY=secret
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
 
   db:
     image: postgres:14.1-alpine
@@ -29,7 +31,7 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 3s
       retries: 3
