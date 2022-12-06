@@ -7,6 +7,7 @@ Create Date: 2022-10-18 16:33:04.057611
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import UUID
 
 
 # revision identifiers, used by Alembic.
@@ -17,16 +18,15 @@ depends_on = None
 
 
 def upgrade() -> None:
-    conn = op.get_bind()
-    conn.execute("""CREATE TABLE users (
-          id TEXT PRIMARY KEY,
-          name TEXT NOT NULL,
-          email TEXT UNIQUE NOT NULL,
-          profile_pic TEXT NOT NULL
-        );"""
+    op.create_table(
+        'users',
+        sa.Column('id', UUID(as_uuid=True), nullable=False, primary_key=True),
+        sa.Column('google_id', sa.String, nullable=True),
+        sa.Column('name', sa.String, nullable=False),
+        sa.Column('email', sa.String, nullable=False),
+        sa.Column('profile_pic', sa.Unicode(200)),
     )
-
+    op.create_index('google_id_index', 'users', ['google_id'])
 
 def downgrade() -> None:
-    conn = op.get_bind()
-    conn.execute("DROP TABLE users")
+    op.drop_table('users')
