@@ -21,6 +21,12 @@ with Session(engine) as session:
 
 users = session.query(User).filter_by(google_id='google_id').all()
 
-raise Exception(users[0].name)
+assert users[0].name == 'Soroush'
+
+repo = UserRepository(session=session)
+
+user = repo.get_by_google_id(google_id='google_id')
+
+assert user.name == 'Soroush'
 
 
