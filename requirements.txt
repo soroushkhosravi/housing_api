@@ -13,3 +13,4 @@ pgeocode
 numpy
 flask-wtf
 werkzeug
+sqlalchemy
