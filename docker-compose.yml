@@ -14,6 +14,8 @@ services:
       - GOOGLE_CLIENT_SECRET=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
       - OAUTHLIB_INSECURE_TRANSPORT=1
       - SECRET_KEY=secret
+    depends_on:
+      - db
 
   db:
     image: postgres:14.1-alpine
@@ -26,11 +28,22 @@ services:
       - '5432:5432'
     volumes:
       - db:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
 
   alembic:
     build: .
     volumes:
       - ./:/usr/src/app
+    environment:
+      - DB_URL=postgresql://postgres:postgres@db:5432/default
+    depends_on:
+      - db
+
+
 
   nginx:
     build: ./nginx/dev

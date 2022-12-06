@@ -189,9 +189,9 @@ def callback():
     # )
 
     # Doesn't exist? Add to database
-    existing_user = User.query.get(unique_id)
+    existing_user = User.query.filter(User.google_id == unique_id).first()
     if not existing_user:
-        user = User(id=unique_id, name=users_name, email=users_email, profile_pic=picture)
+        user = User(google_id=unique_id, name=users_name, email=users_email, profile_pic=picture)
         db.session.add(user)
         db.session.commit()
         existing_user = user
