@@ -2,6 +2,8 @@
 import json
 import os
 import requests
+from collections import defaultdict
+from datetime import datetime
 from flask import Flask, jsonify, render_template, request, redirect, url_for
 from flask_login import (
     LoginManager,
@@ -11,14 +13,12 @@ from flask_login import (
     logout_user,
     UserMixin
 )
-from oauthlib.oauth2 import WebApplicationClient
-
+from forms.address import AddressForm
 from infrastructure.database import db
 from models.user import User
-from forms.address import AddressForm
+from oauthlib.oauth2 import WebApplicationClient
 from repositories import get_crime_repository
-from datetime import datetime
-from collections import defaultdict
+from repositories import get_user_repository
 from repositories.user import UserRepository
 
 GOOGLE_CLIENT_ID = os.environ["GOOGLE_CLIENT_ID"]
@@ -190,7 +190,7 @@ def callback():
     # )
 
     # Doesn't exist? Add to database
-    user_repo = UserRepository(session=db.session)
+    user_repo = get_user_repository()
     existing_user = user_repo.get_by_google_id(google_id=unique_id)
     if not existing_user:
         user = User(google_id=unique_id, name=users_name, email=users_email, profile_pic=picture)
