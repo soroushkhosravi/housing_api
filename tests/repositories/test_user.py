@@ -4,29 +4,37 @@ from sqlalchemy import create_engine
 import pytest
 from infrastructure.database import db
 from sqlalchemy.orm import Session
+from repositories import get_user_repository
+import uuid
 
-def raise_exception():
-    raise Exception(db.Model.metadata.__dict__)
+@pytest.fixture
+def session():
+    """."""
+    engine = create_engine('sqlite://')
+    db.Model.metadata.drop_all(engine)
+    db.Model.metadata.create_all(engine)
 
-engine = create_engine('sqlite://')
-db.Model.metadata.create_all(engine)
-with Session(engine) as session:
-    session.add(User(
+    return Session(engine)
+
+def test_adding_user(session):
+    """."""
+    repo = get_user_repository(db=session)
+    repo.add(User(
         google_id = 'google_id',
         name='Soroush',
         email = 'a@a.com',
         profile_pic='picture.com'
     ))
-    session.commit()
+    repo.commit()
 
-users = session.query(User).filter_by(google_id='google_id').all()
+    users = session.query(User).all()
 
-assert users[0].name == 'Soroush'
+    assert len(users) == 1
 
-repo = UserRepository(session=session)
+    added_user = users[0]
 
-user = repo.get_by_google_id(google_id='google_id')
-
-assert user.name == 'Soroush'
-
-
+    assert isinstance(added_user.id, uuid.UUID)
+    assert added_user.google_id == 'google_id'
+    assert added_user.name == 'Soroush'
+    assert added_user.email == 'a@a.com'
+    assert added_user.profile_pic == 'picture.com'
