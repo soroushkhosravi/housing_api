@@ -17,5 +17,5 @@ class UserRepository:
         self._session.add(model)
 
     def commit(self):
-        """Commmits a transaction."""
+        """Commits a transaction."""
         self._session.commit()
