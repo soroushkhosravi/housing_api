@@ -18,8 +18,7 @@ from infrastructure.database import db
 from models.user import User
 from oauthlib.oauth2 import WebApplicationClient
 from repositories import get_crime_repository
-from repositories import get_user_repository
-from repositories.user import UserRepository
+from services import get_user_service
 
 GOOGLE_CLIENT_ID = os.environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_CLIENT_SECRET"]
@@ -185,22 +184,15 @@ def callback():
 
     # Create a user in our db with the information provided
     # by Google
-    # user = User(
-    #     id_=unique_id, name=users_name, email=users_email, profile_pic=picture
-    # )
-
-    # Doesn't exist? Add to database
-    user_repo = get_user_repository()
-    existing_user = user_repo.get_by_google_id(google_id=unique_id)
-    if not existing_user:
-        user = User(google_id=unique_id, name=users_name, email=users_email, profile_pic=picture)
-        user_repo.add(user)
-        user_repo.commit()
-        existing_user = user
+    existing_user = get_user_service().existing_google_user(
+        unique_google_id=unique_id,
+        email=users_email,
+        picture=picture,
+        username=users_name
+    )
 
     # Begin user session by logging the user in
     login_user(existing_user)
-
     # Send user back to homepage
     return redirect(url_for("index"))
 
