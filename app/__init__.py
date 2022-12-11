@@ -19,6 +19,7 @@ from models.user import User
 from oauthlib.oauth2 import WebApplicationClient
 from repositories import get_crime_repository
 from services import get_user_service
+import redis
 
 GOOGLE_CLIENT_ID = os.environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_CLIENT_SECRET"]
@@ -203,6 +204,18 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
+@app.route('/redis')
+def redis_setting():
+    """."""
+    r = redis.Redis(
+        host='second.l7ejrh.ng.0001.usw2.cache.amazonaws.com',
+        port=6379
+    )
+    r.set('name', 'Soroush')
+
+    name = r.get('name')
+
+    return name
 
 @app.route('/address', methods=["GET", "POST"])
 @login_required
