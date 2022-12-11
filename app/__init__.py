@@ -37,8 +37,8 @@ login_manager.login_view = "index"
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 redis_for_app = redis.Redis(
-    host='second.l7ejrh.ng.0001.usw2.cache.amazonaws.com',
-    port=6379
+    host=os.environ["REDIS_HOST"],
+    port=os.environ["REDIS_PORT"]
 )
 
 
