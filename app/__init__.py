@@ -204,18 +204,28 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
-@app.route('/redis')
-def redis_setting():
+@app.route('/redis/<name>')
+def redis_setting(name):
     """."""
     r = redis.Redis(
         host='second.l7ejrh.ng.0001.usw2.cache.amazonaws.com',
         port=6379
     )
-    r.set('name', 'Soroush')
+    r.set('name', name)
+
+    return 'Name Set successfully.'
+
+@app.route('/name')
+def get_name():
+    r = redis.Redis(
+        host='second.l7ejrh.ng.0001.usw2.cache.amazonaws.com',
+        port=6379
+    )
 
     name = r.get('name')
 
     return name
+
 
 @app.route('/address', methods=["GET", "POST"])
 @login_required
