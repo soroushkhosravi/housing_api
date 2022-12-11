@@ -36,6 +36,11 @@ login_manager.init_app(app)
 login_manager.login_view = "index"
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
+redis_for_app = redis.Redis(
+    host='second.l7ejrh.ng.0001.usw2.cache.amazonaws.com',
+    port=6379
+)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -207,23 +212,13 @@ def logout():
 @app.route('/redis/<name>')
 def redis_setting(name):
     """."""
-    r = redis.Redis(
-        host='second.l7ejrh.ng.0001.usw2.cache.amazonaws.com',
-        port=6379
-    )
-    r.set('name', name)
+    redis_for_app.set('name', name)
 
     return 'Name Set successfully.'
 
 @app.route('/name')
 def get_name():
-    r = redis.Redis(
-        host='second.l7ejrh.ng.0001.usw2.cache.amazonaws.com',
-        port=6379
-    )
-
-    name = r.get('name')
-
+    name = redis_for_app.get('name')
     return name
 
 
