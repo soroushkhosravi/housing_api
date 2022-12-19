@@ -34,7 +34,9 @@ app.secret_key = os.environ["SECRET_KEY"]
 db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "index"
+
+# This is coomented out as we have unauthorised auth handler.
+# login_manager.login_view = "index"
 login_manager.anonymous_user = MyAnonymousUser
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
@@ -299,6 +301,9 @@ def investigate_address():
 
     return rendering_template
 
+@app.errorhandler(404)
+def resource_not_found(e):
+    return jsonify(error=str(e)), 404
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
