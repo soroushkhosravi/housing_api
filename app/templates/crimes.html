@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
-
+{% block head %}
+<script src="{{url_for('static', filename='mine.js')}}"></script>
+{% endblock %}
 {% block content %}
+    <div id="app">[[ message ]]</div>
     {% if crimes %}
     <div class="container">
         <p>Total Number of crimes: {{ crimes_number }}</p>

@@ -16,7 +16,7 @@ def test_grab_location_returns_expected_location_with_valid_postcode(repo):
     assert isinstance(location, Location)
 
     assert location.longitude == -0.49158
-    assert location.latitude == 51.7551
+    assert location.latitude == 51.76236
 
 def test_none_is_returned_as_location_with_invalid_postcode(repo):
     """Tests we can get the location."""

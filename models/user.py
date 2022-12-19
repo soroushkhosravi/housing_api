@@ -1,7 +1,6 @@
 """The definition of the user model."""
 import uuid
 import uuid
-from flask_login import UserMixin
 from infrastructure.database import db
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.dialects.postgresql import UUID
@@ -41,10 +40,50 @@ class GUID(TypeDecorator):
                 value = uuid.UUID(value)
             return value
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(GUID(), primary_key=True, default=uuid.uuid4)
     google_id = db.Column(db.String)
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     profile_pic = db.Column(db.String, nullable=False)
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.id)
+
+class MyAnonymousUser:
+    """Class for defining the anonymous user in not logged in endpoints."""
+
+    def __init__(self):
+        self.id = None
+        self.google_id = None
+        self.name = 'Guest'
+        self.email = None
+        self.profile_pic = None
+
+    @property
+    def is_active(self):
+        return False
+
+    @property
+    def is_authenticated(self):
+        return False
+
+    @property
+    def is_anonymous(self):
+        return True
+
+    def get_id(self):
+        return None

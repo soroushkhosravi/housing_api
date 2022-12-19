@@ -3,8 +3,8 @@ import json
 import os
 import requests
 from collections import defaultdict
-from datetime import datetime
-from flask import Flask, jsonify, render_template, request, redirect, url_for
+from datetime import datetime, timedelta
+from flask import Flask, jsonify, render_template, request, redirect, url_for, make_response
 from flask_login import (
     LoginManager,
     current_user,
@@ -15,11 +15,12 @@ from flask_login import (
 )
 from forms.address import AddressForm
 from infrastructure.database import db
-from models.user import User
+from models.user import User, MyAnonymousUser
 from oauthlib.oauth2 import WebApplicationClient
-from repositories import get_crime_repository
+from repositories import get_crime_repository, get_user_repository
 from services import get_user_service
 import redis
+import jwt
 
 GOOGLE_CLIENT_ID = os.environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_CLIENT_SECRET"]
@@ -34,6 +35,7 @@ db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "index"
+login_manager.anonymous_user = MyAnonymousUser
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 redis_for_app = redis.Redis(
@@ -41,17 +43,46 @@ redis_for_app = redis.Redis(
     port=os.environ["REDIS_PORT"]
 )
 
+# Change this to an env variable coming from the AWS and inject it to the deployment containers.
+JWT_SECRET = 'SOROUSH'
+JWT_VALID_EXPIRY_SECONDS = 100
+JWT_ALGORITHM = 'HS256'
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
 
+@login_manager.request_loader
+def load_user_from_request(request):
+    """Loads the user from request.
+
+    By using this function, you will be able to grab the user from the request, sessions, cookies, etc.
+
+    It is another option like the user_loader which reads the user from the flask session set by login_user function.
+    """
+    user = None
+    jwt_token = request.cookies.get('jwt_token')
+    if not jwt_token:
+        jwt_token = request.headers.get('jwt_token')
+    if jwt_token:
+        try:
+            google_id = jwt.decode(jwt_token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+
+            google_id = google_id.get('google_id')
+            if google_id:
+
+                user = get_user_repository().get_by_google_id(google_id=google_id)
+
+        except (jwt.DecodeError, jwt.ExpiredSignatureError):
+            pass
+    return user
 
 @app.route('/hello')
 @login_required
 def hello():
     """Hello mate. this is hello."""
-    return 'Hello matee.'
+    return f'Hello mate.'
 
 
 @app.route("/")
@@ -197,17 +228,31 @@ def callback():
         username=users_name
     )
 
-    # Begin user session by logging the user in
-    login_user(existing_user)
-    # Send user back to homepage
-    return redirect(url_for("index"))
+    # This function puts the user_id in the session which is a cookie named session.
+    # And the user will be read by the user_loader function.
+    # login_user(existing_user)
+
+    response = make_response(redirect(url_for("index")))
+    # The token is set to enable us use the request loader function.
+    jwt_token = jwt.encode(
+        {
+            'google_id': existing_user.google_id,
+            'exp': datetime.utcnow() + timedelta(seconds=JWT_VALID_EXPIRY_SECONDS)
+        },
+        JWT_SECRET,
+        JWT_ALGORITHM
+    )
+    response.set_cookie('jwt_token', jwt_token)
+    return response
 
 
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    response = make_response(redirect(url_for("index")))
+    response.delete_cookie('jwt_token')
+    return response
 
 @app.route('/redis/<name>')
 def redis_setting(name):
