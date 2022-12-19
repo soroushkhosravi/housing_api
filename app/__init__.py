@@ -4,7 +4,7 @@ import os
 import requests
 from collections import defaultdict
 from datetime import datetime, timedelta
-from flask import Flask, jsonify, render_template, request, redirect, url_for, make_response
+from flask import Flask, jsonify, render_template, request, redirect, url_for, make_response, abort
 from flask_login import (
     LoginManager,
     current_user,
@@ -52,6 +52,14 @@ JWT_ALGORITHM = 'HS256'
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
+
+@login_manager.unauthorized_handler
+def unauthorised():
+    """Handling the login process properly."""
+    if request.path == '/hello':
+        abort(404, description="User not logged in.")
+    return redirect(url_for('index'))
+
 
 @login_manager.request_loader
 def load_user_from_request(request):
