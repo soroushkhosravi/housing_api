@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% block head %}
-<script src="{{url_for('static', filename='mine.js')}}"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 {% endblock %}
 {% block content %}
-    <div id="app">[[ message ]]</div>
+    <div id="like_button_container"></div>
     {% if crimes %}
     <div class="container">
         <p>Total Number of crimes: {{ crimes_number }}</p>
@@ -23,4 +24,5 @@
         <p>Crimes not available.</p>
     {% endif %}
     </div>
+    <script src="{{url_for('static', filename='like_button.js')}}"></script>
 {% endblock %}
