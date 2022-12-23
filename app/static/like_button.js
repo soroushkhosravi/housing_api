@@ -1,30 +1,25 @@
 'use strict';
+function Country(props) {
+    return React.createElement('div', {
+        className: "container"
+    }, React.createElement('h2', {
+        className: "country-name"
+    }, `Country Name: ${props.name}`), React.createElement('p', {
+        className: "capital"
+    }, `Capital: ${props.capital}`), React.createElement('p', {
+        className: "population"
+    }, `Population: ${props.population}`));
+}
 
-const e = React.createElement;
-
-class LikeButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { liked: false };
-  }
-
+class Button extends React.Component {
   render() {
-    if (this.state.liked) {
-      return e(
-          'button',
-          { onClick: () => this.setState({ liked: false }), className: "btn btn-danger" },
-          'You clicked me once. Click again.'
-      );
-    }
-
-    return e(
-      'button',
-      { onClick: () => this.setState({ liked: true }), className: "btn btn-primary" },
-      'Click me'
-    );
+    const name = this.props.name
+    return React.createElement('button', {className: 'btn btn-primary'}, 'I am a ' + name);
   }
 }
 
-const domContainer = document.querySelector('#like_button_container');
-const root = ReactDOM.createRoot(domContainer);
-root.render(e(LikeButton));
+
+//let countryElement = React.createElement(Country, {name: 'United States', capital: 'Washington, D.C.', population: '332 million'});
+let countryElement = React.createElement(Button, {name: 'Soroush'});
+let rootElement = document.getElementById('like_button_container');
+ReactDOM.createRoot(rootElement).render(countryElement);
