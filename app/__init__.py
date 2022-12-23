@@ -94,6 +94,12 @@ def hello():
     """Hello mate. this is hello."""
     return f'Hello mate.'
 
+@app.route('/user')
+@login_required
+def get_user():
+    """Getting the current user."""
+    return jsonify(name=current_user.name)
+
 
 @app.route("/")
 def index():
