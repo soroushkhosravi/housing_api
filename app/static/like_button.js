@@ -60,12 +60,52 @@ class ShowCurrentUser extends React.Component {
 	}
 }
 
+class User extends React.Component {
+	constructor(props) {
+        super(props);
+        this.state = {
+            userName: '',
+            UserLoaded: false
+        };
+    }
 
-let buttonElement = React.createElement(Button, {name: 'A Good button'});
+    componentDidMount() {
+        fetch(
+			"/user")
+            .then((res) => res.json())
+            .then((json) => {
+                this.setState({
+                    userName: json.name,
+                    userLoaded: true
+            });
+        })
+    }
+
+    render() {
+        const { userLoaded, userName } = this.state;
+        if (!userLoaded) return React.createElement('div', {}, 'Please Wait.') ;
+        return (
+            React.createElement(
+                'button',
+                {className: 'btn btn-primary'},
+                this.state.userName
+            )
+        );
+    }
+}
+
+
+
+
 let currentUserElement = React.createElement(ShowCurrentUser);
 let rootElement = document.getElementById('user_element');
 ReactDOM.createRoot(rootElement).render(currentUserElement);
 
+let buttonElement = React.createElement(Button, {name: 'A Good button'});
 let rootElement2 = document.getElementById('button_element');
 ReactDOM.createRoot(rootElement2).render(buttonElement);
+
+let userElement = React.createElement(User);
+let rootElement3 = document.getElementById('element');
+ReactDOM.createRoot(rootElement3).render(userElement)
 
