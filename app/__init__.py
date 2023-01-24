@@ -92,7 +92,7 @@ def load_user_from_request(request):
 @login_required
 def hello():
     """Hello mate. this is hello."""
-    return f'Hello mate.'
+    return f'Hello mate. You are my friend.'
 
 @app.route('/user')
 @login_required
