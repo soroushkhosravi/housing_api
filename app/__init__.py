@@ -40,10 +40,10 @@ login_manager.init_app(app)
 login_manager.anonymous_user = MyAnonymousUser
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
-redis_for_app = redis.Redis(
-    host=os.environ["REDIS_HOST"],
-    port=os.environ["REDIS_PORT"]
-)
+# redis_for_app = redis.Redis(
+#     host=os.environ["REDIS_HOST"],
+#     port=os.environ["REDIS_PORT"]
+# )
 
 # Change this to an env variable coming from the AWS and inject it to the deployment containers.
 JWT_SECRET = 'SOROUSH'
@@ -273,14 +273,14 @@ def logout():
 @app.route('/redis/<name>')
 def redis_setting(name):
     """."""
-    redis_for_app.set('name', name)
+    # redis_for_app.set('name', name)
 
     return 'Name Set successfully.'
 
 @app.route('/name')
 def get_name():
-    name = redis_for_app.get('name')
-    return name
+    # name = redis_for_app.get('name')
+    return 'name'
 
 
 @app.route('/address', methods=["GET", "POST"])
