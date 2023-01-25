@@ -168,7 +168,7 @@ data "aws_route53_zone" "selected" {
 }
 
 resource "aws_route53_record" "abc" {
-  name    = "abc"
+  name    = "test"
   type    = "CNAME"
   ttl     = 600
   zone_id = data.aws_route53_zone.selected.id
