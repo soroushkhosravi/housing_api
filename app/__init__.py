@@ -21,6 +21,7 @@ from repositories import get_crime_repository, get_user_repository
 from services import get_user_service
 import redis
 import jwt
+import logging
 
 GOOGLE_CLIENT_ID = os.environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_CLIENT_SECRET"]
@@ -92,6 +93,7 @@ def load_user_from_request(request):
 @login_required
 def hello():
     """Hello mate. this is hello."""
+    logging.error('An error happened!')
     return f'Hello mate. You are my friend.'
 
 @app.route('/user')
