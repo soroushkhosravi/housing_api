@@ -4,6 +4,8 @@ metadata:
   name: "terraform-example"
   labels:
     test: "MyExampleApp"
+  annotations:
+    ad.datadoghq.com/web.logs: '[{"source": "web","service": "web","tags": ["env:prod"]}]'
 spec:
   replicas: 3
   selector:
