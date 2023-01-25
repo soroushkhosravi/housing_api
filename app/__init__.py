@@ -272,6 +272,11 @@ def logout():
     response.delete_cookie('jwt_token')
     return response
 
+@app.route*"/raise")
+def raise_exception():
+    """Raises an exception."""
+    raise Exception("An error is raised. Can you see in datadog?")
+
 @app.route('/redis/<name>')
 def redis_setting(name):
     """."""
