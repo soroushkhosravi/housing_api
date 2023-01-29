@@ -282,7 +282,7 @@ def redis_setting(name):
     """."""
     # redis_for_app.set('name', name)
 
-    return 'Name Set successfully.'
+    return 'Name Set successfully. Yeah.'
 
 @app.route('/name')
 def get_name():
