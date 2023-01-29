@@ -23,10 +23,10 @@ spec:
           resources:
             limits:
               memory: "1Gi"
-              cpu: "1000m"
+              cpu: "300m"
             requests:
               memory: "0.5Gi"
-              cpu: "800m"
+              cpu: "100m"
           ports:
             - name: http
               containerPort: 80
@@ -36,10 +36,10 @@ spec:
           resources:
             limits:
               memory: "1Gi"
-              cpu: "1000m"
+              cpu: "300m"
             requests:
               memory: "0.5Gi"
-              cpu: "800m"
+              cpu: "100m"
           env:
             - name: DB_URL
               value: "postgresql://soroush:{{.Values.dbPassword}}@{{.Values.db}}/firstsoroushdb"
