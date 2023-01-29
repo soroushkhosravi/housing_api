@@ -19,6 +19,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: 0.50
+          memory: 512M
+        reservations:
+          cpus: 0.25
+          memory: 128M
 
   db:
     image: postgres:14.1-alpine
@@ -52,6 +60,14 @@ services:
       - 80:80
     depends_on:
       - web
+    deploy:
+      resources:
+        limits:
+          cpus: 0.50
+          memory: 512M
+        reservations:
+          cpus: 0.25
+          memory: 128M
   cache:
     image: redis:6.2-alpine
     restart: always

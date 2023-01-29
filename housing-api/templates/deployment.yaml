@@ -20,12 +20,26 @@ spec:
       containers:
         - name: new-deployment
           image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api-nginx:{{ .Values.commit }}"
+          resources:
+            limits:
+              memory: 200Mi
+              cpu: 300m
+            requests:
+              memory: 100Mi
+              cpu: 100m
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
         - name: "web"
           image: "892893225782.dkr.ecr.us-west-2.amazonaws.com/housing-api:{{ .Values.commit }}"
+          resources:
+            limits:
+              memory: 200Mi
+              cpu: 300m
+            requests:
+              memory: 100Mi
+              cpu: 100m
           env:
             - name: DB_URL
               value: "postgresql://soroush:{{.Values.dbPassword}}@{{.Values.db}}/firstsoroushdb"
