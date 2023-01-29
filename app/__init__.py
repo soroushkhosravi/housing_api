@@ -299,10 +299,11 @@ def investigate_address():
     rendering_template = render_template('address_form.html', form=form, user=current_user)
 
     if form.validate_on_submit():
+        three_month_earlier = datetime.now() - timedelta(days=90)
         crimes = get_crime_repository().get_crimes(
             postcode=form.post_code.data,
-            month=datetime.now().month - 3,
-            year=datetime.now().year
+            month=three_month_earlier.month,
+            year=three_month_earlier.year
         )
 
         crimes_dict = defaultdict(lambda: 0) if crimes else {}
