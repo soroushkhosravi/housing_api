@@ -260,6 +260,8 @@ def callback():
         JWT_SECRET,
         JWT_ALGORITHM
     )
+    # If we want to set a cross site cookie, we use the following code:
+    # esp.headers.add('Set-Cookie','cross-site-cookie=bar; SameSite=None; Secure')
     response.set_cookie('jwt_token', jwt_token)
     return response
 
