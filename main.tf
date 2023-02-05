@@ -78,7 +78,7 @@ resource "aws_security_group" "_" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [aws_eks_cluster.example.vpc_config[0].cluster_security_group_id]
+    security_groups = [data.aws_eks_cluster.example.vpc_config[0].cluster_security_group_id]
   }
 
   # Allow all outbound traffic.
