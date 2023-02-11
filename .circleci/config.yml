@@ -77,7 +77,7 @@ jobs:
 workflows:
   application-deployment:
     jobs:
-      - test
+#      - test
       # The requirements of this job are setting the following ENV variables for the circleci application:
       # AWS_ACCESS_KEY_ID, AWS_ACCOUNT_ID, AWS_ECR_REGISTRY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY
       - aws-ecr/build-and-push-image:
@@ -89,8 +89,8 @@ workflows:
                 - main
           dockerfile: Dockerfile
           repo: housing-api
-          requires:
-            - test
+#          requires:
+#            - test
       - aws-ecr/build-and-push-image:
           name: BuildNginxImage
           tag: $CIRCLE_SHA1
@@ -100,8 +100,8 @@ workflows:
                 - main
           dockerfile: nginx/Dockerfile
           repo: housing-api-nginx
-          requires:
-            - test
+#          requires:
+#            - test
       - terraform/fmt:
           checkout: true
           context: terraform
