@@ -293,7 +293,7 @@ def get_name():
 
 @app.route('/ip')
 def show_ip():
-    """Shows the ip of the request sender."""
+    """Shows the ip of the request sender of the request."""
     return jsonify({'ip': request.environ.get('HTTP_X_REAL_IP', request.remote_addr)})
 
 @app.route('/address', methods=["GET", "POST"])
