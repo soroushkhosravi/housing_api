@@ -291,7 +291,7 @@ def get_name():
     # name = redis_for_app.get('name')
     return 'name'
 
-@app.route('/ip')
+@app.route('/ip-show')
 def show_ip():
     """Shows the ip of the request sender of the request."""
     return jsonify({'ip': request.environ.get('HTTP_X_REAL_IP', request.remote_addr)})
