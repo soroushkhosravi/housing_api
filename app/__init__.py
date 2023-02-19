@@ -299,7 +299,7 @@ def show_ip():
 @app.route('/address', methods=["GET", "POST"])
 @login_required
 def investigate_address():
-    """Investigates a specific address."""
+    """Investigates a specific address.."""
     form = AddressForm()
 
     rendering_template = render_template('address_form.html', form=form, user=current_user)
