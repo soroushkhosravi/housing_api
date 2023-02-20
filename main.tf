@@ -154,7 +154,7 @@ resource "helm_release" "housing-api-remote-release" {
   }
 
   set {
-    name  = "load-balancer-sg-id"
+    name  = "loadBalancerSgId"
     value = aws_security_group.load-balancer-sg.id
   }
 }
