@@ -188,10 +188,10 @@ resource "aws_security_group" "load-balancer-sg" {
 
   # Only MySQL in
   ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    security_groups = [data.aws_eip.private_subnet_1_elastic_ip.public_ip]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [data.aws_eip.private_subnet_1_elastic_ip.public_ip]
   }
 
   # Allow all outbound traffic.
