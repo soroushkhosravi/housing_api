@@ -152,6 +152,11 @@ resource "helm_release" "housing-api-remote-release" {
     name  = "dbPassword"
     value = random_password.password.result
   }
+
+  set {
+    name  = "load-balancer-sg-id"
+    value = aws_security_group.load-balancer-sg.id
+  }
 }
 
 data "kubernetes_ingress_v1" "example" {
@@ -165,6 +170,37 @@ data "kubernetes_ingress_v1" "example" {
 data "aws_route53_zone" "selected" {
   name         = "housingselection.co.uk."
   private_zone = false
+}
+
+# Getting the elastic ip address of the private subnet to use for the security group pf the load balancer.
+data "aws_eip" "private_subnet_1_elastic_ip" {
+  filter {
+    name   = "tag:Name"
+    values = ["my-eks-vpc-stack-EIP1"]
+  }
+}
+
+# Creating the security group for the load balancer.
+resource "aws_security_group" "load-balancer-sg" {
+  name        = "load-balancer-sg"
+  vpc_id      = data.aws_cloudformation_stack.my-eks-vpc-stack.outputs.VpcId
+  description = "Load Balancer (terraform-managed)"
+
+  # Only MySQL in
+  ingress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    security_groups = [data.aws_eip.private_subnet_1_elastic_ip.public_ip]
+  }
+
+  # Allow all outbound traffic.
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_route53_record" "abc" {
