@@ -191,7 +191,7 @@ resource "aws_security_group" "load-balancer-sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = [data.aws_eip.private_subnet_1_elastic_ip.public_ip]
+    cidr_blocks = ["${data.aws_eip.private_subnet_1_elastic_ip.public_ip}/32"]
   }
 
   # Allow all outbound traffic.
