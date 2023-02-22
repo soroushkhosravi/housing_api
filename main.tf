@@ -218,6 +218,7 @@ resource "aws_security_group" "load-balancer-sg" {
 }
 */
 
+/*
 resource "aws_route53_record" "abc" {
   name    = "test"
   type    = "CNAME"
@@ -225,4 +226,26 @@ resource "aws_route53_record" "abc" {
   zone_id = data.aws_route53_zone.selected.id
 
   records = [data.kubernetes_ingress_v1.example.status.0.load_balancer.0.ingress.0.hostname]
+}
+*/
+
+locals {
+  lb_name_parts = split("-", split(".", data.kubernetes_ingress_v1.example.status.0.load_balancer.0.ingress.0.hostname).0)
+}
+
+data "aws_lb" "foobar" {
+  name = join("-", slice(local.lb_name_parts, 0, length(local.lb_name_parts) - 1))
+}
+
+
+resource "aws_route53_record" "abc" {
+  zone_id = data.aws_route53_zone.selected.id
+  name    = "test"
+  type    = "A"
+
+  alias {
+    name                   = data.aws_lb.foobar.dns_name
+    zone_id                = data.aws_lb.foobar.zone_id
+    evaluate_target_health = true
+  }
 }
