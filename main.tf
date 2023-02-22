@@ -153,6 +153,7 @@ resource "helm_release" "housing-api-remote-release" {
     value = random_password.password.result
   }
 
+  /*
   set {
     name  = "loadBalancerSgId"
     value = aws_security_group.load-balancer-sg.id
@@ -162,7 +163,10 @@ resource "helm_release" "housing-api-remote-release" {
     name  = "VpcSgId"
     value = data.aws_eks_cluster.example.vpc_config[0].cluster_security_group_id
   }
+ */
 }
+
+
 
 data "kubernetes_ingress_v1" "example" {
   metadata {
@@ -177,6 +181,7 @@ data "aws_route53_zone" "selected" {
   private_zone = false
 }
 
+/*
 # Getting the elastic ip address of the private subnet to use for the security group pf the load balancer.
 data "aws_eip" "private_subnet_1_elastic_ip" {
   filter {
@@ -184,8 +189,13 @@ data "aws_eip" "private_subnet_1_elastic_ip" {
     values = ["my-eks-vpc-stack-EIP1"]
   }
 }
+*/
 
+
+/*
 # Creating the security group for the load balancer.
+# This security group is just open to the elastic ip address of the first NAT GATEWAY
+# in the first private subnet.
 resource "aws_security_group" "load-balancer-sg" {
   name        = "load-balancer-sg"
   vpc_id      = data.aws_cloudformation_stack.my-eks-vpc-stack.outputs.VpcId
@@ -207,6 +217,7 @@ resource "aws_security_group" "load-balancer-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+*/
 
 resource "aws_route53_record" "abc" {
   name    = "test"

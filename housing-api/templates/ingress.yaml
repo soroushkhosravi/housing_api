@@ -6,7 +6,8 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/security-groups: "{{.Values.loadBalancerSgId}},{{.Values.VpcSgId}}"
+#    Comment out the below comment if you want to have customised security groups on the load balancer controller.
+#    alb.ingress.kubernetes.io/security-groups: "{{.Values.loadBalancerSgId}},{{.Values.VpcSgId}}"
 spec:
   ingressClassName: alb
   rules:
