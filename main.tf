@@ -218,7 +218,7 @@ resource "aws_security_group" "load-balancer-sg" {
 }
 */
 
-/*
+
 resource "aws_route53_record" "abc" {
   name    = "test"
   type    = "CNAME"
@@ -227,8 +227,8 @@ resource "aws_route53_record" "abc" {
 
   records = [data.kubernetes_ingress_v1.example.status.0.load_balancer.0.ingress.0.hostname]
 }
-*/
 
+/*
 locals {
   lb_name_parts = split("-", split(".", data.kubernetes_ingress_v1.example.status.0.load_balancer.0.ingress.0.hostname).0)
 }
@@ -249,3 +249,4 @@ resource "aws_route53_record" "abc" {
     evaluate_target_health = true
   }
 }
+*/
