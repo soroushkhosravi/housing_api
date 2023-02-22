@@ -152,20 +152,19 @@ resource "helm_release" "housing-api-remote-release" {
     name  = "dbPassword"
     value = random_password.password.result
   }
-
-  /*
-  set {
-    name  = "loadBalancerSgId"
-    value = aws_security_group.load-balancer-sg.id
-  }
-
-  set {
-    name  = "VpcSgId"
-    value = data.aws_eks_cluster.example.vpc_config[0].cluster_security_group_id
-  }
- */
 }
 
+/*
+set {
+name  = "loadBalancerSgId"
+value = aws_security_group.load-balancer-sg.id
+}
+
+set {
+name  = "VpcSgId"
+value = data.aws_eks_cluster.example.vpc_config[0].cluster_security_group_id
+}
+*/
 
 
 data "kubernetes_ingress_v1" "example" {
