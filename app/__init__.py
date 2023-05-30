@@ -76,9 +76,13 @@ def load_user_from_request(request):
     It is another option like the user_loader which reads the user from the flask session set by login_user function.
     """
     user = None
+
     jwt_token = request.cookies.get('jwt_token')
     if not jwt_token:
-        jwt_token = request.headers.get('jwt_token')
+        headers = request.headers
+        if headers.get('Authentication'):
+            authentication = headers['Authentication']
+            jwt_token = authentication.split(' ')[1]
     if jwt_token:
         try:
             google_id = jwt.decode(jwt_token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
@@ -271,7 +275,7 @@ def callback():
         # The token is set to enable us use the request loader function.
         # If we want to set a cross site cookie, we use the following code:
         # esp.headers.add('Set-Cookie','cross-site-cookie=bar; SameSite=None; Secure')
-        response.set_cookie('jwt_token', jwt_token)
+        response.set_cookie('jwt_token', jwt_token, httponly=True)
         return response
 
     # This part of code can be used if we have a separate frontend to redirect to it.
