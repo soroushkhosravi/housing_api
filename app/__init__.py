@@ -4,7 +4,7 @@ import os
 import requests
 from collections import defaultdict
 from datetime import datetime, timedelta
-from flask import Flask, jsonify, render_template, request, redirect, url_for, make_response, abort
+from flask import Flask, jsonify, render_template, request, redirect, url_for, make_response, abort, session
 from flask_login import (
     LoginManager,
     current_user,
@@ -59,8 +59,11 @@ def load_user(user_id):
 @login_manager.unauthorized_handler
 def unauthorised():
     """Handling the login process properly."""
-    if request.path == '/hello':
-        abort(404, description="User not logged in.")
+    if request.path.split('/')[1] == 'api':
+        return jsonify({
+            "message": "user not logged in.",
+            "auth_url": request.url_root + '/login'
+        })
     return redirect(url_for('index'))
 
 
@@ -89,9 +92,9 @@ def load_user_from_request(request):
             pass
     return user
 
-@app.route('/hello')
+@app.route('/api')
 @login_required
-def hello():
+def api():
     """Hello mate. this is hello."""
     logging.error('An error happened!')
     return f'Hello mate. You are my friend.'
@@ -122,9 +125,14 @@ def login():
 
     # Use library to construct the request for login and provide
     # scopes that let you retrieve user's profile from Google
+
+    # The following piece of code can be used to get the separate frontend url when calling login function from outside
+    # like a complete react frontend and in the /callback, we can redirect to that url.
+    next_url = request.args.get('next_url')
+    session['next_url'] = next_url
     request_uri = client.prepare_request_uri(
         get_google_provider_cfg()["authorization_endpoint"],
-        redirect_uri=request.base_url + "/callback",
+        redirect_uri=request.base_url + f"/callback",
         scope=["openid", "email", "profile"],
     )
     # The url is included the `fall back` route, the google client ID the scope we want:
@@ -249,9 +257,6 @@ def callback():
     # This function puts the user_id in the session which is a cookie named session.
     # And the user will be read by the user_loader function.
     # login_user(existing_user)
-
-    response = make_response(redirect(url_for("index")))
-    # The token is set to enable us use the request loader function.
     jwt_token = jwt.encode(
         {
             'google_id': existing_user.google_id,
@@ -260,10 +265,19 @@ def callback():
         JWT_SECRET,
         JWT_ALGORITHM
     )
-    # If we want to set a cross site cookie, we use the following code:
-    # esp.headers.add('Set-Cookie','cross-site-cookie=bar; SameSite=None; Secure')
-    response.set_cookie('jwt_token', jwt_token)
-    return response
+
+    if session.get('next_url') is None:
+        response = make_response(redirect(url_for("index")))
+        # The token is set to enable us use the request loader function.
+        # If we want to set a cross site cookie, we use the following code:
+        # esp.headers.add('Set-Cookie','cross-site-cookie=bar; SameSite=None; Secure')
+        response.set_cookie('jwt_token', jwt_token)
+        return response
+
+    # This part of code can be used if we have a separate frontend to redirect to it.
+    # We get the url in the login function.
+    ext_domain = f"{session['next_url']}" + f"/{jwt_token}"
+    return redirect(ext_domain)
 
 
 @app.route("/logout")
