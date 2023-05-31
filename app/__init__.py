@@ -82,7 +82,10 @@ def load_user_from_request(request):
         headers = request.headers
         if headers.get('Authentication'):
             authentication = headers['Authentication']
-            jwt_token = authentication.split(' ')[1]
+            split_header = authentication.split(' ')
+            if len(split_header) != 2 or split_header[0] != 'Bearer':
+                return user
+            jwt_token = split_header[1]
     if jwt_token:
         try:
             google_id = jwt.decode(jwt_token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
@@ -338,6 +341,15 @@ def investigate_address():
         rendering_template = render_template('crimes.html', crimes=crimes_dict, crimes_number=len(crimes))
 
     return rendering_template
+
+@app.route("/api/user")
+@login_required
+def user():
+    """Returns the data of a current user."""
+    return jsonify({
+        "message": "current user is found.",
+        "user": json.dumps({"username": current_user.name, "email": current_user.email})
+    })
 
 @app.errorhandler(404)
 def resource_not_found(e):
