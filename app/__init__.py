@@ -22,6 +22,7 @@ from services import get_user_service
 import redis
 import jwt
 import logging
+from flask_cors import CORS
 
 GOOGLE_CLIENT_ID = os.environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_CLIENT_SECRET"]
@@ -30,6 +31,7 @@ GOOGLE_DISCOVERY_URL = (
 )
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ['DB_URL']
 app.secret_key = os.environ["SECRET_KEY"]
 db.init_app(app)
