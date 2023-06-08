@@ -347,7 +347,7 @@ def investigate_address():
 @app.route("/api/user")
 @login_required
 def user():
-    """Returns the data of a current user."""
+    """Returns the data of a current users."""
     return jsonify({
         "message": "current user is found.",
         "user": json.dumps({"username": current_user.name, "email": current_user.email})
