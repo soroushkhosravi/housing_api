@@ -243,7 +243,7 @@ data "aws_lb" "foobar" {
 
 resource "aws_route53_record" "abc" {
   zone_id = data.aws_route53_zone.selected.id
-  name    = "testing"
+  name    = "new"
   type    = "A"
 
   alias {
