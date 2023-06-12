@@ -344,6 +344,33 @@ def investigate_address():
 
     return rendering_template
 
+
+@app.route('/api/addresses', methods=["POST"])
+@login_required
+def investigation_address():
+    """Investigates a specific address."""
+    data = request.get_json(force=True, silent=True)
+
+    if data and isinstance(data, dict):
+        postcode = data.get("post_code")
+        if postcode is not None:
+            three_month_earlier = datetime.now() - timedelta(days=90)
+            crimes = get_crime_repository().get_crimes(
+                postcode=postcode,
+                month=three_month_earlier.month,
+                year=three_month_earlier.year
+            )
+
+            crimes_dict = defaultdict(lambda: 0) if crimes else {}
+
+            for crime in crimes:
+                crimes_dict[crime.category] += 1
+
+            return jsonify({"crimes": crimes_dict})
+
+    return jsonify({"message": "postcode not passed in request body."})
+
+
 @app.route("/api/user")
 @login_required
 def user():
