@@ -38,46 +38,12 @@ jobs:
       - run:
           name: stop the container
           command: |
-            docker stop $(docker ps -aq)
-#  plan-apply:
-#    working_directory: /tmp/project
-#    docker:
-#      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
-#    steps:
-#      - checkout
-#      - run:
-#          name: terraform init & plan
-#          command: |
-#            apt update && apt upgrade
-#            apt install curl
-#            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#            unzip awscliv2.zip
-#            sudo ./aws/install
-#            terraform init -input=false
-#            terraform plan -out tfapply
-#      - persist_to_workspace:
-#          root: .
-#          paths:
-#            - .
-#  apply:
-#    docker:
-#      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
-#    steps:
-#      - attach_workspace:
-#          at: .
-#      - run:
-#          name: terraform
-#          command: |
-#            terraform apply -auto-approve tfapply
-#      - persist_to_workspace:
-#          root: .
-#          paths:
-#            - .
+            docker stop soroush)
 
 workflows:
   application-deployment:
     jobs:
-#      - test
+      - test
       # The requirements of this job are setting the following ENV variables for the circleci application:
       # AWS_ACCESS_KEY_ID, AWS_ACCOUNT_ID, AWS_ECR_REGISTRY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY
       - aws-ecr/build-and-push-image:
@@ -89,8 +55,8 @@ workflows:
                 - main
           dockerfile: Dockerfile
           repo: housing-api
-#          requires:
-#            - test
+          requires:
+            - test
       - aws-ecr/build-and-push-image:
           name: BuildNginxImage
           tag: $CIRCLE_SHA1
@@ -100,8 +66,8 @@ workflows:
                 - main
           dockerfile: nginx/Dockerfile
           repo: housing-api-nginx
-#          requires:
-#            - test
+          requires:
+            - test
       - terraform/fmt:
           checkout: true
           context: terraform
