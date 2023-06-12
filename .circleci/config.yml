@@ -38,7 +38,7 @@ jobs:
       - run:
           name: stop the container
           command: |
-            docker stop soroush)
+            docker stop soroush
 
 workflows:
   application-deployment:
