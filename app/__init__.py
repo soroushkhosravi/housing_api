@@ -365,7 +365,7 @@ def investigation_address():
 
             for crime in crimes:
                 crimes_dict[crime.category] += 1
-
+            
             return jsonify({"crimes": crimes_dict})
 
     return jsonify({"message": "postcode not passed in request body."})
