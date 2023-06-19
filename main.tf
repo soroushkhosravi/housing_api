@@ -132,7 +132,7 @@ resource "helm_release" "housing-api-remote-release" {
   name         = "housing-api-release"
   namespace    = "housing-api"
   repository   = "https://soroushkhosravi.github.io/helm-charts"
-  version      = "0.3.0"
+  version      = "0.4.0"
   chart        = "housing-api"
   reset_values = true
   set {
