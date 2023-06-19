@@ -131,9 +131,9 @@ data "external" "env" {
 resource "helm_release" "housing-api-remote-release" {
   name         = "housing-api-release"
   namespace    = "housing-api"
-  repository  = "https://soroushkhosravi.github.io/helm-charts"
-  version     = "0.2.0"
-  chart       = "housing-api"
+  repository   = "https://soroushkhosravi.github.io/helm-charts"
+  version      = "0.2.0"
+  chart        = "housing-api"
   reset_values = true
   set {
     name  = "current-time"
