@@ -154,11 +154,6 @@ resource "helm_release" "housing-api-remote-release" {
     name  = "dbPassword"
     value = random_password.password.result
   }
-
-  set {
-    name  = "serviceAccount"
-    value = "housing-api"
-  }
   set {
     name  = "namespace"
     value = "housing-api"
