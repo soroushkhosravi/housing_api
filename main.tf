@@ -158,6 +158,10 @@ resource "helm_release" "housing-api-remote-release" {
     name  = "namespace"
     value = "housing-api"
   }
+  set {
+    name  = "serviceAccountName"
+    value = "housing-api"
+  }
 }
 
 /*
