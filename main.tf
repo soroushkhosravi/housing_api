@@ -131,7 +131,7 @@ data "external" "env" {
 resource "helm_release" "housing-api-remote-release" {
   name         = "housing-api-release"
   namespace    = "housing-api"
-  chart        = "./housing-api"
+  chart        = "https://soroushkhosravi.github.io/helm-charts/housing-api-0.1.0.tgz"
   reset_values = true
   set {
     name  = "current-time"
