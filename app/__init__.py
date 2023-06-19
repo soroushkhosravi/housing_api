@@ -368,7 +368,7 @@ def investigation_address():
             
             return jsonify({"crimes": crimes_dict})
 
-    return jsonify({"message": "postcode not passed in request body."})
+    return jsonify({"message": "postcode not passed in request body. Please pass it."})
 
 
 @app.route("/api/user")
