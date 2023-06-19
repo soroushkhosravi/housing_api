@@ -131,7 +131,7 @@ data "external" "env" {
 resource "helm_release" "housing-api-remote-release" {
   name         = "housing-api-release"
   namespace    = "housing-api"
-  chart        = "https://soroushkhosravi.github.io/helm-charts/housing-api-0.1.0.tgz"
+  chart        = "https://soroushkhosravi.github.io/helm-charts/housing-api-0.2.0.tgz"
   reset_values = true
   set {
     name  = "current-time"
@@ -151,6 +151,15 @@ resource "helm_release" "housing-api-remote-release" {
   set {
     name  = "dbPassword"
     value = random_password.password.result
+  }
+
+  set {
+    name  = "serviceAccount"
+    value = "housing-api"
+  }
+  set {
+    name  = "namespace"
+    value = "housing-api"
   }
 }
 
