@@ -265,7 +265,7 @@ def callback():
 
     # This function puts the user_id in the session which is a cookie named session.
     # And the user will be read by the user_loader function.
-    # login_user(existing_user)
+    # login_user(existing_use)
     jwt_token = jwt.encode(
         {
             'google_id': existing_user.google_id,
