@@ -1,7 +1,7 @@
 Flask
 gunicorn
 flask_sqlalchemy
-psycopg2-binary
+psycopg2
 requests
 oauthlib
 pyOpenSSL

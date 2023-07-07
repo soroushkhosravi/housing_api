@@ -8,6 +8,11 @@ WORKDIR /usr/src/app
 ENV PYTHONWRITEBYTECODE 1
 ENV PYTHONBUFFERED 1
 
+# Install runtime packages
+RUN apt-get -y update
+RUN apt-get -y upgrade
+RUN apt-get -y install libpq-dev
+RUN apt-get -y install build-essential
 # Install dependencies
 RUN pip install --upgrade pip
 COPY ./requirements.txt /usr/src/app/requirements.txt
